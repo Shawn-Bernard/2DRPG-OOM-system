@@ -5,15 +5,17 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-class Player : Actor
+public class Player : Actor
 {
-    public Player(int hp, int atk, int shld, int iLife, Vector2 startingPlace) 
+    public HealthSystem _healthSystem = new HealthSystem(); 
+
+    public Player(int hp, int atk, int shld, int iLife) //, Vector2 startingPlace) 
     {
-        health = hp;
-        power = atk;
-        shield = shld;
-        life = iLife;
-        position = startingPlace; 
+        _healthSystem.health = hp;
+        _healthSystem.power = atk;
+        _healthSystem.shield = shld;
+        _healthSystem.life = iLife;
+        //position = startingPlace; 
     }
 
     public int score = 0; 

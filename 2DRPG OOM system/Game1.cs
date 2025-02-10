@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Diagnostics;
 
 namespace _2DRPG_OOM_system
 {
@@ -8,6 +10,8 @@ namespace _2DRPG_OOM_system
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        public Player myPlayer = new Player(50, 30, 50, 3); 
 
         public Game1()
         {
@@ -21,6 +25,8 @@ namespace _2DRPG_OOM_system
             // TODO: Add your initialization logic here
 
             base.Initialize();
+            Debug.Print(myPlayer._healthSystem.health.ToString()); 
+            
         }
 
         protected override void LoadContent()
@@ -48,5 +54,7 @@ namespace _2DRPG_OOM_system
 
             base.Draw(gameTime);
         }
+
+        
     }
 }
