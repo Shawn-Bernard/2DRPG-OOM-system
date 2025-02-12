@@ -11,13 +11,19 @@ namespace _2DRPG_OOM_system
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
+        private static Vector2 playerPos = new Vector2(100, 100); 
         private Texture2D mapTexture; 
 
-        public Player myPlayer = new Player(50, 30, 50, 3);
+        public Player myPlayer = new Player(50, 30, 50, 3, playerPos);
+
+        public Sprite _playerSprite = new Sprite();
 
         private Dictionary<Vector2, int> tileMap;
-        private List<Rectangle> textureStore; 
+        private List<Rectangle> textureStore;
+
+        public int tileSize = 16;
+
+        SpriteFont mySpriteFont; 
 
         public Game1()
         {
@@ -33,8 +39,10 @@ namespace _2DRPG_OOM_system
 
             base.Initialize();
             //Debug.Print(myPlayer._healthSystem.health.ToString());
-            mapTexture = Content.Load<Texture2D>("tilemap"); 
-            
+            mapTexture = Content.Load<Texture2D>("The_Tilemap");
+            _playerSprite._player = Content.Load<Texture2D>("The_Tilemap");
+            _playerSprite.collider = new Rectangle((int)playerPos.X, (int)playerPos.Y, 32, 32);
+            mySpriteFont = Content.Load<SpriteFont>("Font");
         }
 
         protected override void LoadContent()
@@ -49,21 +57,54 @@ namespace _2DRPG_OOM_system
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            KeyboardState keyboardState = Keyboard.GetState();
 
-            base.Update(gameTime);
+            if (keyboardState.IsKeyDown(Keys.A)) 
+            {
+                myPlayer.Movement(new Vector2(-4, 0)); 
+            }
+
+            if (keyboardState.IsKeyDown(Keys.D)) 
+            {
+                myPlayer.Movement(new Vector2(4, 0));
+            }
+
+            if (keyboardState.IsKeyDown(Keys.W)) 
+            {
+                myPlayer.Movement(new Vector2(0, -4));
+            }
+
+            if (keyboardState.IsKeyDown(Keys.S)) 
+            {
+                myPlayer.Movement(new Vector2(0, 4));
+            }
+
+                // TODO: Add your update logic here
+
+                base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.CornflowerBlue);            
 
             // TODO: Add your drawing code here
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-            _spriteBatch.Draw(mapTexture, new Vector2(0, 0), Color.White); 
-            
+            //_spriteBatch.Draw(mapTexture, myPlayer.position, Color.White); 
+
+            for(int i = 0; i < 50; i++) 
+            {
+                for (int j = 5; j < 29; j++)
+                {
+                    _spriteBatch.Draw(mapTexture, new Rectangle(i * tileSize, j * tileSize, tileSize * 2, tileSize * 2), new Rectangle(1 * tileSize, 4 * tileSize, tileSize, tileSize), Color.White);
+                }
+            }
+
+            _spriteBatch.Draw(_playerSprite._player, new Rectangle((int)myPlayer.position.X, (int)myPlayer.position.Y, tileSize * 2, tileSize * 2), new Rectangle(1 * tileSize, 8 * tileSize, tileSize, tileSize), Color.White);
+
+            _spriteBatch.DrawString(mySpriteFont, "HP: " + myPlayer._healthSystem.health, new Vector2(0, 0), Color.White);
 
             _spriteBatch.End();
 

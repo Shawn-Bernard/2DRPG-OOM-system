@@ -9,7 +9,7 @@ public class HealthSystem
     public int health
     {
         get { return Health; }
-        set { Health = Math.Max(0, Math.Max(maxHealth, value)); }
+        set { Health = Math.Max(0, Math.Min(maxHealth, value)); }
     }
 
     private int Power;
@@ -24,7 +24,7 @@ public class HealthSystem
     public int shield
     {
         get { return Shield; }
-        set { Shield = Math.Max(0, Math.Max(maxShield, value)); }
+        set { Shield = Math.Max(0, Math.Min(maxShield, value)); }
     }
 
     private int Life;

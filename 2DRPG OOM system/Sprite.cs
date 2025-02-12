@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +11,10 @@ using System.Threading.Tasks;
     public Texture2D _player;
     public Rectangle collider;
     public List<Texture2D> MapTexture;
-    public Texture2D _enemy;  
+    public List<Texture2D> _enemies; 
+    
+
+   
 
 }
 
