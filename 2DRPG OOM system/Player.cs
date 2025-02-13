@@ -1,39 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+
 
 public class Player : Actor
 {
-    public HealthSystem _healthSystem = new HealthSystem(); 
+    public HealthSystem _healthSystem = new HealthSystem();
 
-    public Player(int hp, int atk, int shld, int iLife, Vector2 startingPlace) 
+    public Player(int hp, int atk, int shld, int iLife, int iPosX, int iPosY)
     {
         _healthSystem.health = hp;
         _healthSystem.power = atk;
         _healthSystem.shield = shld;
         _healthSystem.life = iLife;
-        position = startingPlace; 
+        tilemap_PosX = iPosX;
+        tilemap_PosY = iPosY;
     }
 
-    public int score = 0; 
-
-    public void Movement(Vector2 dir) 
-    {
-        position += dir; 
-    }
-
-    public void GettingScore(int _score) 
-    {
-        score += _score; 
-    }
+    public int score = 0;
 
     
-
+    public void GettingScore(int _score)
+    {
+        score += _score;
+    }  
 
 
 }

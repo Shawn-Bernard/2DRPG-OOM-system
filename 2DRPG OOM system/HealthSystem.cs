@@ -43,6 +43,7 @@ public class HealthSystem
         {
             if(damage - shield > health) 
             {
+                health = 0; 
                 Revive();
             }
             else
@@ -70,12 +71,14 @@ public class HealthSystem
 
     public void Revive() 
     {
-        if(life > 0) 
+        if (life > 1)
         {
             life--;
-            health = maxHealth; 
+            health = maxHealth;
             shield -= maxShield;
         }
+        else
+            life = 0; 
     }
 
 }

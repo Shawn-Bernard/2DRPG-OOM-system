@@ -1,28 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using System;
+using System.Security.Cryptography.X509Certificates;
 
-class Enemy : Actor
+
+public class Enemy : Actor
 {
     public HealthSystem _healthSystem = new HealthSystem();
 
-    public Enemy(int hp, int atk, int shld, Vector2 startingPlace)
+    public Enemy(int hp, int atk, int shld, int iPosX, int iPosY)
     {
         _healthSystem.health = hp;
         _healthSystem.power = atk;
         _healthSystem.shield = shld;
         _healthSystem.life = 1;
-        position = startingPlace;
+        tilemap_PosX = iPosX;
+        tilemap_PosY = iPosY;
     }
+
+    public string eMovement; 
 
     private string[] State = new string[] { "walk", "chase", "attack" };
 
     public float calculatingDistance(Player _player) 
     {
-        return _player.position.X;  
+        return 4f; 
     }
 
     public string GetState(string[] _state, int i) 
@@ -51,6 +52,40 @@ class Enemy : Actor
 
 
     }
+
+    public string TypeOfMovement() 
+    {
+        string _typeOfMovement = "";
+        System.Random random = new System.Random();
+        int accN = random.Next(0, 4);
+
+        switch (accN) 
+        {
+            case 0:                
+                _typeOfMovement = "Right";
+                break;
+            case 1:
+                _typeOfMovement = "Left";
+                break;
+            case 2:
+                _typeOfMovement = "Down";
+                break;
+            case 3:
+                _typeOfMovement = "Up"; 
+                break;
+            default:
+                //Nothing Happens
+                break;                 
+        }
+
+        return _typeOfMovement;
+
+    }
+
+    
+
+
+
 
 
     
