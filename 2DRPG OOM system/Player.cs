@@ -13,16 +13,11 @@ public class Player : Actor
         _healthSystem.life = iLife;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
-    }
+        active = true;
 
-    public int score = 0;
-
-    
-    public void GettingScore(int _score)
-    {
-        score += _score;
-    }  
-
+        _healthSystem.setMaxHP(hp);
+        _healthSystem.setMaxShield(shld);
+    }    
 
 }
 

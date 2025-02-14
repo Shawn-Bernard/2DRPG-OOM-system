@@ -15,46 +15,18 @@ public class Enemy : Actor
         _healthSystem.life = 1;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
+        _healthSystem.setMaxHP(hp);
+        _healthSystem.setMaxShield(shld);
+
+        active = true; 
     }
 
     public string eMovement; 
 
-    private string[] State = new string[] { "walk", "chase", "attack" };
-
-    public float calculatingDistance(Player _player) 
-    {
-        return 4f; 
-    }
-
-    public string GetState(string[] _state, int i) 
-    {
-        return _state[i];
-    }
-
-    private void Enemy_Movement(string[] _state, int i) 
-    {
-        switch (_state[i]) 
-        {
-            // Depend of the state, the enemy movement IA will change. I still have to think about it
-            case "walk":
-                Console.WriteLine("Enemy walk normally");
-                break;
-            case "chase":
-                Console.WriteLine("Enemy chase the player");
-                break;
-            case "attack":
-                Console.WriteLine("Enemy attacks");
-                break;
-            default:
-                Console.WriteLine("Nothing");
-                break;
-        }
-
-
-    }
-
+   
     public string TypeOfMovement() 
     {
+        // This is the AI for the movement for the enemies which is at random
         string _typeOfMovement = "";
         System.Random random = new System.Random();
         int accN = random.Next(0, 4);
@@ -82,12 +54,43 @@ public class Enemy : Actor
 
     }
 
-    
+
+    //Methods I plan to use in the future
+
+    /*private string[] State = new string[] { "walk", "chase", "attack" };
+
+   public float calculatingDistance(Player _player) 
+   {
+       return 4f; 
+   }
+
+   public string GetState(string[] _state, int i) 
+   {
+       return _state[i];
+   }
 
 
+   private void Enemy_Movement(string[] _state, int i) 
+   {
+       switch (_state[i]) 
+       {
+           // Depend of the state, the enemy movement IA will change. I still have to think about it
+           case "walk":
+               Console.WriteLine("Enemy walk normally");
+               break;
+           case "chase":
+               Console.WriteLine("Enemy chase the player");
+               break;
+           case "attack":
+               Console.WriteLine("Enemy attacks");
+               break;
+           default:
+               Console.WriteLine("Nothing");
+               break;
+       }
 
 
+   } */
 
-    
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,18 +19,17 @@ using System.Threading.Tasks;
     {
         get { return MapSizeY; }
     }
-
-    string sJoined;
-
+     
     public int verticalIndex;
     public int horizontalIndex; 
 
     public char[,] multidimensionalMap = new char[mapSizeX, mapSizeY];
 
-    
+    public string loadedMap = @"2DRPG-OOM-system\2DRPG OOM system\LoadedMap1.txt"; 
 
     public string GenerateMapString(int width, int height) 
     {
+        // This is where the char are generate to create the map
         char[,] mapMatrix = new char[width, height];
 
         for (int j = 0; j < height; j++)
@@ -39,9 +39,11 @@ using System.Threading.Tasks;
                 if (i == 0 || j == 0 || i == width - 1 || j == height - 1)
                     mapMatrix[i, j] = '#';  //1st rule: The borders should be walls
                 else if ((i == 3 && j == 3) || (i == 22 && j == 5))
-                    mapMatrix[i, j] = '*';
+                    mapMatrix[i, j] = '*';  //2nd rule: Where the player and enemy, it should be field to avoid locating in a wall or block
+                else if ((i == width - 2) && (j == height - 2))
+                    mapMatrix[i, j] = '@';  //3rd rule: This locates where the door for the next map are going to be
                 else
-                    mapMatrix[i, j] = GenerateChar();
+                    mapMatrix[i, j] = GenerateChar();  //This generate the char at random
             }
         }
 
@@ -92,6 +94,7 @@ using System.Threading.Tasks;
 
     public string convertMapToString(int x, int y, char[,] smap)
     {
+        // This convert a bidimentional array of char into a single string
         string result = "";
 
         for (int j = 0; j < y; j++)
@@ -108,6 +111,7 @@ using System.Threading.Tasks;
 
     public void ConvertToMap(string sMap, char[,] daMap)
     {
+        // This convert a string into a bidimentional array of char
         var lines = sMap.Split('\n');
 
         for (int j = 0; j < lines.Length; j++)
@@ -131,6 +135,10 @@ using System.Threading.Tasks;
                 {
                     daMap[i, j] = '$';
                 }
+                else if (lines[j][i] == '@') //Door
+                {
+                    daMap[i, j] = '@'; 
+                }
                 else
                 {
                     daMap[i, j] = '*';
@@ -141,12 +149,14 @@ using System.Threading.Tasks;
         
     public char MapToChar(char[,] cMap, int i, int j) 
     {
+        //This is to get the char in a certain position of the bidimentional array
         return cMap[i, j];
     }
 
 
     public void getTheIndexes(char tile) 
     {
+        // This determine the coordinates to crop the tilemap image to get the correct Tile
         switch (tile) 
         {
             case '*':
@@ -165,6 +175,10 @@ using System.Threading.Tasks;
                 horizontalIndex = 4;
                 verticalIndex = 3;
                 break;
+            case '@':
+                horizontalIndex = 9;
+                verticalIndex = 2;
+                break;
             default:
                 horizontalIndex = 0;
                 verticalIndex = 4;
@@ -174,7 +188,14 @@ using System.Threading.Tasks;
         }
     }
 
-    
+    public void LoadPremadeMap(string mapFilePath)
+    {
+        // This is to load a premade file from a text file
+        string myLines = System.IO.File.ReadAllText(mapFilePath);
+        ConvertToMap(myLines, multidimensionalMap);
+
+
+    }
 
 }
 
