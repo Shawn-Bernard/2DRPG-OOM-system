@@ -47,7 +47,7 @@ public class HealthSystem
         set { Life = Math.Max(0, value); }
     }
 
-
+    public bool isStunned { get; set; }
 
 
     public void TakeDamage(int damage) 
@@ -112,6 +112,16 @@ public class HealthSystem
     {
         // Set the max Shield
         maxShield = _maxshield;
+    }
+
+    public void makeStunned() 
+    {
+        isStunned = true;
+    }
+
+    public void makeUnstunned() 
+    {
+        isStunned = false;
     }
 
 }

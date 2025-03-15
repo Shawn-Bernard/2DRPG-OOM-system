@@ -70,7 +70,7 @@ namespace _2DRPG_OOM_system
             if (myTurn)
             {
                 // Here checks if the player is still alive or still active
-                if (myPlayer.active)
+                if (myPlayer.active && !myPlayer._healthSystem.isStunned)
                 {
                     //Based on the button pressed, the player will move
                     if (keyboardState.IsKeyDown(Keys.A))
@@ -89,6 +89,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(myPlayer, theEnemy))
                                 {
                                     theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
+                                    theEnemy._healthSystem.makeStunned();
                                     //The player steps back after attacking
                                     myPlayer.Movement(1, 0);
                                 }
@@ -116,6 +117,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(myPlayer, theEnemy))
                                 {
                                     theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
+                                    theEnemy._healthSystem.makeStunned();
                                     //The player steps back after attacking
                                     myPlayer.Movement(-1, 0);
                                 }
@@ -141,6 +143,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(myPlayer, theEnemy))
                                 {
                                     theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
+                                    theEnemy._healthSystem.makeStunned();
                                     //The player steps back after attacking
                                     myPlayer.Movement(0, 1);
                                 }
@@ -166,6 +169,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(myPlayer, theEnemy))
                                 {
                                     theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
+                                    theEnemy._healthSystem.makeStunned(); 
                                     //The player steps back after attacking
                                     myPlayer.Movement(0, -1);
                                 }
@@ -176,12 +180,15 @@ namespace _2DRPG_OOM_system
 
                     }
                 }
+
+                if (myPlayer._healthSystem.isStunned)
+                    myPlayer._healthSystem.makeUnstunned(); 
                 
             }
             else 
             {
                 // Checks if the enemy is still alive
-                if (theEnemy.active) { 
+                if (theEnemy.active && !theEnemy._healthSystem.isStunned) { 
                 theEnemy.eMovement = theEnemy.TypeOfMovement();  // Get a random movement base on the AI method
                     switch (theEnemy.eMovement)
                     {
@@ -198,6 +205,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(theEnemy, myPlayer))
                                 {
                                     myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
+                                    myPlayer._healthSystem.makeStunned();
                                     //The enemy steps back after attacking
                                     theEnemy.Movement(-1, 0);
                                 }
@@ -215,6 +223,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(theEnemy, myPlayer))
                                 {
                                     myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
+                                    myPlayer._healthSystem.makeStunned();
                                     //The enemy steps back after attacking
                                     theEnemy.Movement(1, 0);
                                 }
@@ -232,6 +241,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(theEnemy, myPlayer))
                                 {
                                     myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
+                                    myPlayer._healthSystem.makeStunned();
                                     //The enemy steps back after attacking
                                     theEnemy.Movement(0, 1);
                                 }
@@ -249,6 +259,7 @@ namespace _2DRPG_OOM_system
                                 if (myPlayer.enemyCollision(theEnemy, myPlayer))
                                 {
                                     myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
+                                    myPlayer._healthSystem.makeStunned();
                                     //The enemy steps back after attacking
                                     theEnemy.Movement(0, -1);
                                 }
@@ -260,6 +271,9 @@ namespace _2DRPG_OOM_system
                             }
                     }
                 }
+
+                if (theEnemy._healthSystem.isStunned)
+                    theEnemy._healthSystem.makeUnstunned(); 
 
                 myTurn = true;
                

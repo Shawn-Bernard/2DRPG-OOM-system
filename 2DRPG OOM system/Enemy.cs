@@ -17,7 +17,7 @@ public class Enemy : Actor
         tilemap_PosY = iPosY;
         _healthSystem.setMaxHP(hp);
         _healthSystem.setMaxShield(shld);
-
+        _healthSystem.isStunned = false;
         active = true; 
     }
 

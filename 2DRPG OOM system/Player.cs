@@ -13,6 +13,7 @@ public class Player : Actor
         _healthSystem.life = iLife;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
+        _healthSystem.isStunned = false; 
         active = true;
 
         _healthSystem.setMaxHP(hp);
