@@ -48,8 +48,8 @@ public class HealthSystem
     }
 
     public bool isStunned { get; set; }
-
-
+    
+    public string status { get; set; }
     public void TakeDamage(int damage) 
 	{
         // This make the calculation when the actor receives damage. Both health and shield can't be negative, the shield should receive the damage first
@@ -71,6 +71,7 @@ public class HealthSystem
         else 
         {
             shield -= damage; 
+
         }
 	}
 
@@ -117,11 +118,18 @@ public class HealthSystem
     public void makeStunned() 
     {
         isStunned = true;
+        status = "Stunned";
     }
 
     public void makeUnstunned() 
     {
         isStunned = false;
+        
+    }
+
+    public void defaultStatus() 
+    {
+        status = "Normal"; 
     }
 
 }

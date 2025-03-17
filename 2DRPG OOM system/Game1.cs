@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace _2DRPG_OOM_system
@@ -14,8 +15,8 @@ namespace _2DRPG_OOM_system
         private SpriteBatch _spriteBatch;        
         private Texture2D mapTexture; 
         // Creating the Actors: The player and the enemy
-        public Player myPlayer = new Player(50, 8, 50, 3, 3, 3);
-        public Enemy theEnemy = new Enemy(30, 5, 0, 22, 5);
+        public Player myPlayer = new Player(10, 1, 3, 3, 3, 3);
+        public Enemy theEnemy = new Enemy(10, 1, 0, 22, 5);
 
         public bool myTurn = true;
         // This determine the size the tiles are going to have        
@@ -29,6 +30,8 @@ namespace _2DRPG_OOM_system
 
         // This string will contain the text from the text file
         private string pathToMyFile;
+        public string whosTurn;
+        public string turnDisplay; 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -63,221 +66,14 @@ namespace _2DRPG_OOM_system
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
-            // TODO: Add your update logic here
-            KeyboardState keyboardState = Keyboard.GetState();
-            // this checks whose turn it is, the player or the enemy
-            if (myTurn)
-            {
-                // Here checks if the player is still alive or still active
-                if (myPlayer.active && !myPlayer._healthSystem.isStunned)
-                {
-                    //Based on the button pressed, the player will move
-                    if (keyboardState.IsKeyDown(Keys.A))
-                    {
-                        if (!oldState.IsKeyDown(Keys.A))
-                        {
-                            //Here checks if is colliding with the wall or the block
-                            if (myPlayer.checkingForCollision(tileMap, '#', myPlayer, -1, 0) || myPlayer.checkingForCollision(tileMap, '$', myPlayer, -1, 0))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                myPlayer.Movement(-1, 0);
-                                //Here checks if after moving, collides with the enemy
-                                if (myPlayer.enemyCollision(myPlayer, theEnemy))
-                                {
-                                    theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
-                                    theEnemy._healthSystem.makeStunned();
-                                    //The player steps back after attacking
-                                    myPlayer.Movement(1, 0);
-                                }
-                                // Its the enemy turn now
-                                myTurn = false;
-                                System.Threading.Thread.Sleep(100);
-                            }
-                        }
+                       
+            //Based on the button pressed, the player will move
+            myPlayer.UpdatePlayerInput(gameTime, tileMap, theEnemy); 
 
 
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.D))
-                    {
-                        if (!oldState.IsKeyDown(Keys.D))
-                        {
-                            //Here checks if is colliding with the wall or the block
-                            if (myPlayer.checkingForCollision(tileMap, '#', myPlayer, +1, 0) || myPlayer.checkingForCollision(tileMap, '$', myPlayer, +1, 0))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                myPlayer.Movement(1, 0);
-                                //Here checks if after moving, collides with the enemy
-                                if (myPlayer.enemyCollision(myPlayer, theEnemy))
-                                {
-                                    theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
-                                    theEnemy._healthSystem.makeStunned();
-                                    //The player steps back after attacking
-                                    myPlayer.Movement(-1, 0);
-                                }
-                                myTurn = false;
-                                System.Threading.Thread.Sleep(100);
-                            }
-                        }
+            //The enemy movement when is its turn
+            theEnemy.UpdateEnemyMovement(gameTime, tileMap, myPlayer);
 
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.W))
-                    {
-                        if (!oldState.IsKeyDown(Keys.W))
-                        {
-                            //Here checks if is colliding with the wall or the block
-                            if (myPlayer.checkingForCollision(tileMap, '#', myPlayer, 0, -1) || myPlayer.checkingForCollision(tileMap, '$', myPlayer, 0, -1))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                myPlayer.Movement(0, -1);
-                                //Here checks if after moving, collides with the enemy
-                                if (myPlayer.enemyCollision(myPlayer, theEnemy))
-                                {
-                                    theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
-                                    theEnemy._healthSystem.makeStunned();
-                                    //The player steps back after attacking
-                                    myPlayer.Movement(0, 1);
-                                }
-                                myTurn = false;
-                                System.Threading.Thread.Sleep(100);
-                            }
-                        }
-
-                    }
-                    else if (keyboardState.IsKeyDown(Keys.S))
-                    {
-                        if (!oldState.IsKeyDown(Keys.S))
-                        {
-                            //Here checks if is colliding with the wall or the block
-                            if (myPlayer.checkingForCollision(tileMap, '#', myPlayer, 0, 1) || myPlayer.checkingForCollision(tileMap, '$', myPlayer, 0, 1))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                myPlayer.Movement(0, 1);
-                                //Here checks if after moving, collides with the enemy
-                                if (myPlayer.enemyCollision(myPlayer, theEnemy))
-                                {
-                                    theEnemy._healthSystem.TakeDamage(myPlayer._healthSystem.power);
-                                    theEnemy._healthSystem.makeStunned(); 
-                                    //The player steps back after attacking
-                                    myPlayer.Movement(0, -1);
-                                }
-                                myTurn = false;
-                                System.Threading.Thread.Sleep(100);
-                            }
-                        }
-
-                    }
-                }
-
-                if (myPlayer._healthSystem.isStunned)
-                    myPlayer._healthSystem.makeUnstunned(); 
-                
-            }
-            else 
-            {
-                // Checks if the enemy is still alive
-                if (theEnemy.active && !theEnemy._healthSystem.isStunned) { 
-                theEnemy.eMovement = theEnemy.TypeOfMovement();  // Get a random movement base on the AI method
-                    switch (theEnemy.eMovement)
-                    {
-                        //Base on the direction, the enemy will move in the corresponding direction
-                        case "Right":
-                            if (theEnemy.checkingForCollision(tileMap, '#', theEnemy, 1, 0))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                theEnemy.Movement(1, 0);
-                                //Here checks if after moving, collides with the player
-                                if (myPlayer.enemyCollision(theEnemy, myPlayer))
-                                {
-                                    myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
-                                    myPlayer._healthSystem.makeStunned();
-                                    //The enemy steps back after attacking
-                                    theEnemy.Movement(-1, 0);
-                                }
-                            }
-                            break;
-                        case "Left":
-                            if (theEnemy.checkingForCollision(tileMap, '#', theEnemy, -1, 0))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                theEnemy.Movement(-1, 0);
-                                //Here checks if after moving, collides with the player
-                                if (myPlayer.enemyCollision(theEnemy, myPlayer))
-                                {
-                                    myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
-                                    myPlayer._healthSystem.makeStunned();
-                                    //The enemy steps back after attacking
-                                    theEnemy.Movement(1, 0);
-                                }
-                            }
-                            break;
-                        case "Up":
-                            if (theEnemy.checkingForCollision(tileMap, '#', theEnemy, 0, -1))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                theEnemy.Movement(0, -1);
-                                //Here checks if after moving, collides with the player
-                                if (myPlayer.enemyCollision(theEnemy, myPlayer))
-                                {
-                                    myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
-                                    myPlayer._healthSystem.makeStunned();
-                                    //The enemy steps back after attacking
-                                    theEnemy.Movement(0, 1);
-                                }
-                            }
-                            break;
-                        case "Down":
-                            if (theEnemy.checkingForCollision(tileMap, '#', theEnemy, 0, 1))
-                            {
-                                //It doesn't move
-                            }
-                            else
-                            {
-                                theEnemy.Movement(0, 1);
-                                //Here checks if after moving, collides with the player
-                                if (myPlayer.enemyCollision(theEnemy, myPlayer))
-                                {
-                                    myPlayer._healthSystem.TakeDamage(theEnemy._healthSystem.power);
-                                    myPlayer._healthSystem.makeStunned();
-                                    //The enemy steps back after attacking
-                                    theEnemy.Movement(0, -1);
-                                }
-                            }
-                            break;
-                        default:
-                            { // do nothing
-                                break;
-                            }
-                    }
-                }
-
-                if (theEnemy._healthSystem.isStunned)
-                    theEnemy._healthSystem.makeUnstunned(); 
-
-                myTurn = true;
-               
-            }
 
             // Here it checks if the player collides with the door to generate a new map
             if(myPlayer.checkingForCollision(tileMap, '@', myPlayer, 0, 0)) 
@@ -287,13 +83,11 @@ namespace _2DRPG_OOM_system
                 mString = tileMap.GenerateMapString(25, 10);
                 tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             }
-
-            oldState = keyboardState;
+           
             base.Update(gameTime);
             
         }
-
-
+               
 
         protected override void Draw(GameTime gameTime)
         {
@@ -334,15 +128,18 @@ namespace _2DRPG_OOM_system
                 myPlayer.active = false;
             }
 
-            // Draw the UI, stats for the player and for the enemy
+
+            // Draw the UI, stats for the player 
             _spriteBatch.DrawString(mySpriteFont, "Player: ", new Vector2(0, 0), Color.White); 
             _spriteBatch.DrawString(mySpriteFont, "HP: " + myPlayer._healthSystem.health + " Shield: " + myPlayer._healthSystem.shield + " Life: " +
                 myPlayer._healthSystem.life ,  new Vector2(0, 30), Color.White);
+            _spriteBatch.DrawString(mySpriteFont, "Status: " + myPlayer._healthSystem.status, new Vector2(0, 60), Color.White);
 
-
+            // Draw the UI, stats for the enemy           
             _spriteBatch.DrawString(mySpriteFont, "Enemy: ", new Vector2(600, 0), Color.White);
             _spriteBatch.DrawString(mySpriteFont, "HP: " + theEnemy._healthSystem.health + " Shield: " + theEnemy._healthSystem.shield, 
                 new Vector2(600, 30), Color.White);
+            _spriteBatch.DrawString(mySpriteFont, "Status: " + theEnemy._healthSystem.status, new Vector2(600, 60), Color.White); 
                         
 
             _spriteBatch.End();

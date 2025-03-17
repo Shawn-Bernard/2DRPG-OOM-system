@@ -40,8 +40,10 @@ using System.Threading.Tasks;
                     mapMatrix[i, j] = '#';  //1st rule: The borders should be walls
                 else if ((i == 3 && j == 3) || (i == 22 && j == 5))
                     mapMatrix[i, j] = '*';  //2nd rule: Where the player and enemy, it should be field to avoid locating in a wall or block
+                else if ((j == height - 2) && !(i == width - 2))
+                    mapMatrix[i, j] = '*'; // 3rd rule: The last row before the walls will be a normal field
                 else if ((i == width - 2) && (j == height - 2))
-                    mapMatrix[i, j] = '@';  //3rd rule: This locates where the door for the next map are going to be
+                    mapMatrix[i, j] = '@';  //4th rule: This locates where the door for the next map are going to be
                 else
                     mapMatrix[i, j] = GenerateChar();  //This generate the char at random
             }

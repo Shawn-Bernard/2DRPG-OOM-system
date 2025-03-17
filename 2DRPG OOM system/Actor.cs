@@ -23,7 +23,12 @@ public class Actor
     }
 
     // This will check if the actor is alive in the game
-    public bool active; 
+    public bool active;
+
+    // This is the actor turn
+    public bool turn;
+
+   
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForCollision(int Xo, int Yo, int Xt, int Yt) 
