@@ -24,9 +24,10 @@ public class Enemy : Actor
         _healthSystem.status = "Normal"; 
     }
 
-    public string eMovement; 
+    public string eMovement;
+    public bool waitingPhase = false;
+    public float waitingTime = 0;
 
-   
     public string TypeOfMovement() 
     {
         // This is the AI for the movement for the enemies which is at random
@@ -63,10 +64,11 @@ public class Enemy : Actor
         await Task.Delay(2000);
     }
 
-    public void PlayerTurn(Player player) 
+    public void FinishTurn()
     {
         turn = false;
-        player.turn = true;
+        waitingPhase = true;
+        waitingTime = 0;
     }
 
     public void UpdateEnemyMovement(GameTime gameTime, Tilemap tileMap, Player myPlayer) 
@@ -90,19 +92,17 @@ public class Enemy : Actor
                         }
                         else
                         {
-                            Movement(1, 0);
-                            PlayerTurn(myPlayer);
+                            Movement(1, 0);                           
                             //Here checks if after moving, collides with the player
                             if (myPlayer.enemyCollision(this, myPlayer))
                             {
                                 myPlayer._healthSystem.TakeDamage(_healthSystem.power);
 
-                                if(!myPlayer._healthSystem.isStunned)  //Check if the player is not stunned when is dealing damage, stun the enemy in case is true
-                                    myPlayer._healthSystem.makeStunned();
                                 //The enemy steps back after attacking
                                 Movement(-1, 0);
                                 
                             }
+                            FinishTurn();
                         }
                         break;
                     case "Left":
@@ -112,18 +112,17 @@ public class Enemy : Actor
                         }
                         else
                         {
-                            Movement(-1, 0);
-                            PlayerTurn(myPlayer);
+                            Movement(-1, 0);                           
                             //Here checks if after moving, collides with the player
                             if (myPlayer.enemyCollision(this, myPlayer))
                             {
                                 myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                if (!myPlayer._healthSystem.isStunned)  //Check if the player is not stunned when is dealing damage, stun the enemy in case is true
-                                    myPlayer._healthSystem.makeStunned();
+                                
                                 //The enemy steps back after attacking
                                 Movement(1, 0);
                                
                             }
+                            FinishTurn();
                         }
                         break;
                     case "Up":
@@ -133,18 +132,16 @@ public class Enemy : Actor
                         }
                         else
                         {
-                            Movement(0, -1);
-                            PlayerTurn(myPlayer);
+                            Movement(0, -1);                            
                             //Here checks if after moving, collides with the player
                             if (myPlayer.enemyCollision(this, myPlayer))
                             {
                                 myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                if (!myPlayer._healthSystem.isStunned)  //Check if the player is not stunned when is dealing damage, stun the enemy in case is true
-                                    myPlayer._healthSystem.makeStunned();
-                                //The enemy steps back after attacking
+                                
                                 Movement(0, 1);
                                 
                             }
+                            FinishTurn();
                         }
                         break;
                     case "Down":
@@ -154,18 +151,17 @@ public class Enemy : Actor
                         }
                         else
                         {
-                            Movement(0, 1);
-                            PlayerTurn(myPlayer);
+                            Movement(0, 1);                            
                             //Here checks if after moving, collides with the player
                             if (myPlayer.enemyCollision(this, myPlayer))
                             {
                                 myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                if (!myPlayer._healthSystem.isStunned)  //Check if the player is not stunned when is dealing damage, stun the enemy in case is true
-                                    myPlayer._healthSystem.makeStunned();
+                                
                                 //The enemy steps back after attacking
                                 Movement(0, -1);
                                 
                             }
+                            FinishTurn();
                         }
                         break;
                     default:
@@ -178,49 +174,23 @@ public class Enemy : Actor
             {
                 //When the enemy is stunned, enemy's turn is skipped and make the enemy unstunned
                 _healthSystem.makeUnstunned();
-                PlayerTurn(myPlayer);                
-                
+                FinishTurn();
+
+            }
+        }
+
+        if (waitingPhase)
+        {
+            waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (waitingTime > 2f)
+            {
+                myPlayer.turn = true;
+                waitingPhase = false;
+                waitingTime = 0;
             }
         }
     }
-
-
-    //Methods I plan to use in the future
-
-    /*private string[] State = new string[] { "walk", "chase", "attack" };
-
-   public float calculatingDistance(Player _player) 
-   {
-       return 4f; 
-   }
-
-   public string GetState(string[] _state, int i) 
-   {
-       return _state[i];
-   }
-
-
-   private void Enemy_Movement(string[] _state, int i) 
-   {
-       switch (_state[i]) 
-       {
-           // Depend of the state, the enemy movement IA will change. I still have to think about it
-           case "walk":
-               Console.WriteLine("Enemy walk normally");
-               break;
-           case "chase":
-               Console.WriteLine("Enemy chase the player");
-               break;
-           case "attack":
-               Console.WriteLine("Enemy attacks");
-               break;
-           default:
-               Console.WriteLine("Nothing");
-               break;
-       }
-
-
-   } */
+    
 
 }
 

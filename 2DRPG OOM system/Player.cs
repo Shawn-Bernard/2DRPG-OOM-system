@@ -23,10 +23,14 @@ public class Player : Actor
     }
 
     private KeyboardState oldState;
-    private void EnemyTurn(Enemy enemy)
+    public bool waitingPhase = false;
+    public float waitingTime = 0; 
+
+    private void FinishTurn()
     {
         turn = false;
-        enemy.turn = true;
+        waitingPhase = true;
+        waitingTime = 0; 
     }
 
     public void UpdatePlayerInput(GameTime gameTime, Tilemap tileMap, Enemy enemy)
@@ -49,22 +53,17 @@ public class Player : Actor
                             }
                             else
                             {
-                                Movement(-1, 0);
-                                EnemyTurn(enemy); 
+                                Movement(-1, 0);                                
                                 //Here checks if after moving, collides with the enemy
                                 if (enemyCollision(this, enemy))
                                 {
-                                    enemy._healthSystem.TakeDamage(this._healthSystem.power);
-
-                                    if(!enemy._healthSystem.isStunned) //Check if the enemy is not stunned when is dealing damage, stun the enemy in case is true
-                                        enemy._healthSystem.makeStunned();
-
+                                    enemy._healthSystem.TakeDamage(this._healthSystem.power);                                 
                                     //The player steps back after attacking
                                     this.Movement(1, 0);
                                     
 
                                 }
-
+                                FinishTurn();
                             }
                         }
                     }
@@ -79,19 +78,16 @@ public class Player : Actor
                         }
                         else
                         {
-                            Movement(1, 0);
-                            EnemyTurn(enemy);
+                            Movement(1, 0);                            
                             //Here checks if after moving, collides with the enemy
                             if (enemyCollision(this, enemy))
                             {
-                                enemy._healthSystem.TakeDamage(this._healthSystem.power);
-                                if (!enemy._healthSystem.isStunned) //Check if the enemy is not stunned when is dealing damage, stun the enemy in case is true
-                                    enemy._healthSystem.makeStunned();
+                                enemy._healthSystem.TakeDamage(this._healthSystem.power);                                
                                 //The player steps back after attacking
                                 this.Movement(-1, 0);
                                 
                             }
-
+                            FinishTurn();
                         }
                     }
                 }
@@ -105,19 +101,16 @@ public class Player : Actor
                         }
                         else
                         {
-                            Movement(0, -1);
-                            EnemyTurn(enemy);
+                            Movement(0, -1);                            
                             //Here checks if after moving, collides with the enemy
                             if (enemyCollision(this, enemy))
                             {
-                                enemy._healthSystem.TakeDamage(this._healthSystem.power);
-                                if (!enemy._healthSystem.isStunned) //Check if the enemy is not stunned when is dealing damage, stun the enemy in case is true
-                                    enemy._healthSystem.makeStunned();
+                                enemy._healthSystem.TakeDamage(this._healthSystem.power);                                
                                 //The player steps back after attacking
                                 this.Movement(0, 1);
                                 
                             }
-
+                            FinishTurn();
                         }
                     }
                 }
@@ -131,18 +124,20 @@ public class Player : Actor
                         }
                         else
                         {
-                            Movement(0, 1);
-                            EnemyTurn(enemy);
+                            Movement(0, 1);                            
                             //Here checks if after moving, collides with the enemy
                             if (enemyCollision(this, enemy))
                             {
                                 enemy._healthSystem.TakeDamage(this._healthSystem.power);
                                 if (!enemy._healthSystem.isStunned) //Check if the enemy is not stunned when is dealing damage, stun the enemy in case is true
                                     enemy._healthSystem.makeStunned();
+                                else
+                                    enemy._healthSystem.makeUnstunned();
                                 //The player steps back after attacking
                                 this.Movement(0, -1);
                                 
                             }
+                            FinishTurn();
 
                         }
                     }
@@ -152,12 +147,21 @@ public class Player : Actor
             {
                 //When you are stunned, your turn is skipped but your make unstunned
                 _healthSystem.makeUnstunned();
-                EnemyTurn(enemy);
+                FinishTurn();
                 _healthSystem.defaultStatus();
             }
         }
 
-        
+        if (waitingPhase) 
+        {
+            waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(waitingTime > 2f) 
+            {
+                enemy.turn = true; 
+                waitingPhase = false;
+                waitingTime = 0;
+            }
+        }
                 
 
         oldState = keyboardState;

@@ -31,7 +31,10 @@ namespace _2DRPG_OOM_system
         // This string will contain the text from the text file
         private string pathToMyFile;
         public string whosTurn;
-        public string turnDisplay; 
+        public string turnDisplay;
+
+         
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -49,7 +52,7 @@ namespace _2DRPG_OOM_system
             mString = tileMap.GenerateMapString(25, 10);
             tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             oldState = Keyboard.GetState();
-
+            
             
 
         }
@@ -83,7 +86,9 @@ namespace _2DRPG_OOM_system
                 mString = tileMap.GenerateMapString(25, 10);
                 tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             }
-           
+
+            
+
             base.Update(gameTime);
             
         }
@@ -139,8 +144,9 @@ namespace _2DRPG_OOM_system
             _spriteBatch.DrawString(mySpriteFont, "Enemy: ", new Vector2(600, 0), Color.White);
             _spriteBatch.DrawString(mySpriteFont, "HP: " + theEnemy._healthSystem.health + " Shield: " + theEnemy._healthSystem.shield, 
                 new Vector2(600, 30), Color.White);
-            _spriteBatch.DrawString(mySpriteFont, "Status: " + theEnemy._healthSystem.status, new Vector2(600, 60), Color.White); 
-                        
+            _spriteBatch.DrawString(mySpriteFont, "Status: " + theEnemy._healthSystem.status, new Vector2(600, 60), Color.White);
+
+            
 
             _spriteBatch.End();
 

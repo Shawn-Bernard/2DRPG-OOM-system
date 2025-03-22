@@ -52,6 +52,11 @@ public class HealthSystem
     public string status { get; set; }
     public void TakeDamage(int damage) 
 	{
+        if (!isStunned)
+            makeStunned();
+        else
+            makeUnstunned();
+
         // This make the calculation when the actor receives damage. Both health and shield can't be negative, the shield should receive the damage first
         if(damage > shield) 
         {
