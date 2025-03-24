@@ -1,5 +1,6 @@
 ﻿using _2DRPG_OOM_system;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
@@ -127,7 +128,13 @@ public class Enemy : Actor
 
         
     }
-    
+
+    public void DrawEnemiesStats(SpriteBatch _spriteBatch, int num, int posY)
+    {
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Enemy " + num + ": ", new Vector2(100, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(100, posY + 20), Color.White);
+    }
+
 
 }
 

@@ -146,13 +146,18 @@ namespace _2DRPG_OOM_system
 
             characters[0].DrawStats(_spriteBatch); 
 
-            // Draw the UI, stats for the enemy           
+            // Draw the UI, stats for the enemy
+             /*
             _spriteBatch.DrawString(mySpriteFont, "Enemy: ", new Vector2(600, 0), Color.White);
             _spriteBatch.DrawString(mySpriteFont, "HP: " + characters[1]._healthSystem.health + " Shield: " + characters[1]._healthSystem.shield, 
                 new Vector2(600, 30), Color.White);
-            _spriteBatch.DrawString(mySpriteFont, "Status: " + characters[1]._healthSystem.status, new Vector2(600, 60), Color.White);
+            _spriteBatch.DrawString(mySpriteFont, "Status: " + characters[1]._healthSystem.status, new Vector2(600, 60), Color.White); */
 
-            
+            for(int i = 1; i < characters.Count; i++) 
+            {
+                if (characters[i] is Enemy)
+                    ((Enemy)characters[1]).DrawEnemiesStats(_spriteBatch, i, (i - 1) * 40);
+            }
 
             _spriteBatch.End();
 
