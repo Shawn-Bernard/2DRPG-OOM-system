@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
 public class Player : Actor
-{
-    public HealthSystem _healthSystem = new HealthSystem();
+{    
 
     public Player(int hp, int atk, int shld, int iLife, int iPosX, int iPosY)
     {
@@ -25,18 +26,19 @@ public class Player : Actor
 
     private KeyboardState oldState;
     public bool waitingPhase = false;
-    public float waitingTime = 0; 
+    public float waitingTime = 0;
+    public bool endOfTurn = false; 
 
     private void FinishTurn()
-    {
-        turn = false;
+    {        
         waitingPhase = true;
         waitingTime = 0; 
     }
 
-    public void UpdatePlayerInput(GameTime gameTime, Tilemap tileMap, Enemy enemy)
+    public override void TurnUpdate(GameTime gameTime)
     {
         KeyboardState keyboardState = Keyboard.GetState();
+
 
         if (turn)
         {
@@ -93,17 +95,20 @@ public class Player : Actor
 
             if (keyPress) 
             {
-                if(checkingForCollision(tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
+                if(checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(Game1.tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
                 {
                     moveDir = new Vector2(0, 0);
                     
                 }
                 else 
                 {
-                    if(CheckForCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, enemy.tilemap_PosX, enemy.tilemap_PosY)) 
+                    for (int i = 0; i < Game1.characters.Count; i++)
                     {
-                        enemy._healthSystem.TakeDamage(this._healthSystem.power); 
-                        moveDir = new Vector2(0, 0);
+                        if (CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY))
+                        {                           
+                            Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
+                            moveDir = new Vector2(0, 0);
+                        }
                     }
                     Movement((int)moveDir.X, (int)moveDir.Y);                    
                     FinishTurn();
@@ -118,10 +123,10 @@ public class Player : Actor
         if (waitingPhase) 
         {
             waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if(waitingTime > 2f) 
-            {
-                enemy.turn = true; 
+            if(waitingTime > 2f)             {
+                
                 waitingPhase = false;
+                turn = false; 
                 waitingTime = 0;
             }
         }
@@ -129,5 +134,14 @@ public class Player : Actor
 
         oldState = keyboardState;
     }
+
+    public override void DrawStats(SpriteBatch _spriteBatch) 
+    {
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Player: ", new Vector2(0, 0), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(0, 25), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, 50), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(0, 75), Color.White);
+    }
+
 }
 

@@ -1,12 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
 using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 
 public class Enemy : Actor
-{
-    public HealthSystem _healthSystem = new HealthSystem();
+{   
 
     public Enemy(int hp, int atk, int shld, int iPosX, int iPosY)
     {
@@ -64,14 +64,9 @@ public class Enemy : Actor
         await Task.Delay(2000);
     }
 
-    public void FinishTurn()
-    {
-        turn = false;
-        waitingPhase = true;
-        waitingTime = 0;
-    }
+    
 
-    public void UpdateEnemyMovement(GameTime gameTime, Tilemap tileMap, Player myPlayer) 
+    public override void TurnUpdate(GameTime gameTime) 
     {
         if (turn)
         {
@@ -104,20 +99,20 @@ public class Enemy : Actor
                         }
                 }
 
-                if(checkingForCollision(tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y)) 
+                if(checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y)) 
                 {
                     moveDir = new Vector2(0, 0);
                 }
                 else 
                 {
-                    if(CheckForCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, myPlayer.tilemap_PosX, myPlayer.tilemap_PosY)) 
+                    if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY)) 
                     {
-                        myPlayer._healthSystem.TakeDamage(_healthSystem.power);
+                        Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
                         moveDir = new Vector2(0, 0);
                     }
 
                     Movement((int)moveDir.X, (int)moveDir.Y);
-                    FinishTurn();
+                    turn = false;
                 }
 
             }
@@ -125,21 +120,12 @@ public class Enemy : Actor
             {
                 //When the enemy is stunned, enemy's turn is skipped and make the enemy unstunned
                 _healthSystem.makeUnstunned();
-                FinishTurn();
+                turn = false;
 
             }
         }
 
-        if (waitingPhase)
-        {
-            waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (waitingTime > 0.5f)
-            {
-                myPlayer.turn = true;
-                waitingPhase = false;
-                waitingTime = 0;
-            }
-        }
+        
     }
     
 

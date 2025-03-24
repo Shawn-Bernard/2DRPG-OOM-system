@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 
 
@@ -23,6 +24,8 @@ public class Actor
         set { Tilemap_PosY = Math.Max(0, Math.Min(10, value)); }
     }
 
+    public HealthSystem _healthSystem = new HealthSystem();
+
     // This will check if the actor is alive in the game
     public bool active;
 
@@ -35,7 +38,7 @@ public class Actor
     public Vector2 facingDir; 
 
     // This check if two objects are colliding, is will ask two position (x,y)
-    public bool CheckForCollision(int Xo, int Yo, int Xt, int Yt) 
+    public bool CheckForObjCollision(int Xo, int Yo, int Xt, int Yt) 
     {
         return Xo == Xt && Yo == Yt; 
     }
@@ -62,6 +65,11 @@ public class Actor
     public virtual void TurnUpdate(GameTime gameTime) 
     {
 
+    }
+
+    public virtual void DrawStats(SpriteBatch _spriteBatch) 
+    {
+        
     }
 
 }

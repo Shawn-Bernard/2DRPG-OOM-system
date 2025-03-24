@@ -11,12 +11,27 @@ public class TurnManager
     public int characterTurn = 0;
         
 
-    public void UpdateTurnManager(GameTime gameTime, List<Actor> _characters) 
+    public void UpdateTurnManager(GameTime gameTime) 
     {
-        if (characterTurn < _characters.Count) 
+        if (characterTurn < Game1.characters.Count) 
         {
-            Actor turnCharacter = _characters[characterTurn];            
-            _characters[characterTurn].TurnUpdate(gameTime); 
+            Actor turnCharacter = Game1.characters[characterTurn];    
+            
+            if(turnCharacter.turn)
+            {
+                turnCharacter.TurnUpdate(gameTime); 
+            }
+            else
+            {
+                characterTurn++; 
+            }
+            //Game1.characters[characterTurn].TurnUpdate(gameTime); 
+        }
+        else 
+        {
+            characterTurn = 0;
+            for (int i = 0; i < Game1.characters.Count; i++)
+                Game1.characters[i].turn = true; 
         }
     }
 
