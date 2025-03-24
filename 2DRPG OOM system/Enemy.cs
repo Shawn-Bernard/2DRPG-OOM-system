@@ -86,89 +86,40 @@ public class Enemy : Actor
                 {
                     //Base on the direction, the enemy will move in the corresponding direction
                     case "Right":
-                        if (checkingForCollision(tileMap, '#', this, 1, 0))
-                        {
-                            //It doesn't move
-                        }
-                        else
-                        {
-                            Movement(1, 0);                           
-                            //Here checks if after moving, collides with the player
-                            if (myPlayer.enemyCollision(this, myPlayer))
-                            {
-                                myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-
-                                //The enemy steps back after attacking
-                                Movement(-1, 0);
-                                
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(1, 0); 
                         break;
                     case "Left":
-                        if (checkingForCollision(tileMap, '#', this, -1, 0))
-                        {
-                            //It doesn't move
-                        }
-                        else
-                        {
-                            Movement(-1, 0);                           
-                            //Here checks if after moving, collides with the player
-                            if (myPlayer.enemyCollision(this, myPlayer))
-                            {
-                                myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                
-                                //The enemy steps back after attacking
-                                Movement(1, 0);
-                               
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(-1, 0); 
                         break;
                     case "Up":
-                        if (checkingForCollision(tileMap, '#', this, 0, -1))
-                        {
-                            //It doesn't move
-                        }
-                        else
-                        {
-                            Movement(0, -1);                            
-                            //Here checks if after moving, collides with the player
-                            if (myPlayer.enemyCollision(this, myPlayer))
-                            {
-                                myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                
-                                Movement(0, 1);
-                                
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(0, -1); 
                         break;
                     case "Down":
-                        if (checkingForCollision(tileMap, '#', this, 0, 1))
-                        {
-                            //It doesn't move
-                        }
-                        else
-                        {
-                            Movement(0, 1);                            
-                            //Here checks if after moving, collides with the player
-                            if (myPlayer.enemyCollision(this, myPlayer))
-                            {
-                                myPlayer._healthSystem.TakeDamage(_healthSystem.power);
-                                
-                                //The enemy steps back after attacking
-                                Movement(0, -1);
-                                
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(0, 1); 
                         break;
                     default:
                         { // do nothing
+                            moveDir = new Vector2(0, 0); 
                             break;
                         }
                 }
+
+                if(checkingForCollision(tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y)) 
+                {
+                    moveDir = new Vector2(0, 0);
+                }
+                else 
+                {
+                    if(CheckForCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, myPlayer.tilemap_PosX, myPlayer.tilemap_PosY)) 
+                    {
+                        myPlayer._healthSystem.TakeDamage(_healthSystem.power);
+                        moveDir = new Vector2(0, 0);
+                    }
+
+                    Movement((int)moveDir.X, (int)moveDir.Y);
+                    FinishTurn();
+                }
+
             }
             else if (_healthSystem.isStunned) 
             {
@@ -182,7 +133,7 @@ public class Enemy : Actor
         if (waitingPhase)
         {
             waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (waitingTime > 2f)
+            if (waitingTime > 0.5f)
             {
                 myPlayer.turn = true;
                 waitingPhase = false;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 
 
 
@@ -27,8 +28,11 @@ public class Actor
 
     // This is the actor turn
     public bool turn;
+    public bool keyPress; 
 
-   
+    // Movement
+    public Vector2 moveDir;
+    public Vector2 facingDir; 
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForCollision(int Xo, int Yo, int Xt, int Yt) 
@@ -53,6 +57,11 @@ public class Actor
     public bool enemyCollision(Actor _attacker, Actor _attacked) 
     {
         return _attacker.tilemap_PosX == _attacked.tilemap_PosX && _attacker.tilemap_PosY == _attacked.tilemap_PosY;
+    }
+
+    public virtual void TurnUpdate(GameTime gameTime) 
+    {
+
     }
 
 }

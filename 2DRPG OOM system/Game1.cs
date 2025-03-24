@@ -17,6 +17,7 @@ namespace _2DRPG_OOM_system
         // Creating the Actors: The player and the enemy
         public Player myPlayer = new Player(10, 1, 3, 3, 3, 3);
         public Enemy theEnemy = new Enemy(10, 1, 0, 22, 5);
+        public List<Actor> characters = new List<Actor>(); 
 
         public bool myTurn = true;
         // This determine the size the tiles are going to have        
@@ -79,7 +80,7 @@ namespace _2DRPG_OOM_system
 
 
             // Here it checks if the player collides with the door to generate a new map
-            if(myPlayer.checkingForCollision(tileMap, '@', myPlayer, 0, 0)) 
+            if(myPlayer.checkingForCollision(tileMap, '@', myPlayer, 0, 0) && !theEnemy.active) 
             {
                 myPlayer.tilemap_PosX = 3;
                 myPlayer.tilemap_PosY = 3;
@@ -87,7 +88,11 @@ namespace _2DRPG_OOM_system
                 tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             }
 
-            
+            if (myPlayer.turn)
+                whosTurn = "Player Turn";
+            else
+                whosTurn = "Enemies Turn"; 
+
 
             base.Update(gameTime);
             
@@ -129,9 +134,11 @@ namespace _2DRPG_OOM_system
             else
             {
                 _spriteBatch.DrawString(mySpriteFont, "YOU WON!!", new Vector2(300, 0), Color.White); // Write the message if you win
-                theEnemy.active = false;  // Neither the player nor the enemy cannot move.
-                myPlayer.active = false;
+                theEnemy.active = false;  // The enemy is defeated.
+                
             }
+
+            _spriteBatch.DrawString(mySpriteFont, whosTurn, new Vector2(300f, 60f), Color.White); 
 
 
             // Draw the UI, stats for the player 

@@ -20,6 +20,7 @@ public class Player : Actor
         _healthSystem.status = "Normal";
         _healthSystem.setMaxHP(hp);
         _healthSystem.setMaxShield(shld);
+        keyPress = false;
     }
 
     private KeyboardState oldState;
@@ -41,107 +42,45 @@ public class Player : Actor
         {
             if (active && !_healthSystem.isStunned)
             {
+                moveDir = new Vector2(0, 0); 
                 _healthSystem.defaultStatus();
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
                     if (!oldState.IsKeyDown(Keys.A))
                     {
-                        {
-                            if (checkingForCollision(tileMap, '#', this, -1, 0) || checkingForCollision(tileMap, '$', this, -1, 0))
-                            {
-                                //Nothing Happen
-                            }
-                            else
-                            {
-                                Movement(-1, 0);                                
-                                //Here checks if after moving, collides with the enemy
-                                if (enemyCollision(this, enemy))
-                                {
-                                    enemy._healthSystem.TakeDamage(this._healthSystem.power);                                 
-                                    //The player steps back after attacking
-                                    this.Movement(1, 0);
-                                    
-
-                                }
-                                FinishTurn();
-                            }
-                        }
+                        moveDir = new Vector2(-1, 0); 
+                        keyPress = true;
                     }
+                    
                 }
                 else if (keyboardState.IsKeyDown(Keys.D))
                 {
                     if (!oldState.IsKeyDown(Keys.D))
                     {
-                        if (checkingForCollision(tileMap, '#', this, 1, 0) || checkingForCollision(tileMap, '$', this, 1, 0))
-                        {
-                            //Nothing Happen
-                        }
-                        else
-                        {
-                            Movement(1, 0);                            
-                            //Here checks if after moving, collides with the enemy
-                            if (enemyCollision(this, enemy))
-                            {
-                                enemy._healthSystem.TakeDamage(this._healthSystem.power);                                
-                                //The player steps back after attacking
-                                this.Movement(-1, 0);
-                                
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(1, 0); 
+                        keyPress = true;
                     }
                 }
                 else if (keyboardState.IsKeyDown(Keys.W))
                 {
                     if (!oldState.IsKeyDown(Keys.W))
                     {
-                        if (checkingForCollision(tileMap, '#', this, 0, -1) || checkingForCollision(tileMap, '$', this, 0, -1))
-                        {
-                            //Nothing Happen
-                        }
-                        else
-                        {
-                            Movement(0, -1);                            
-                            //Here checks if after moving, collides with the enemy
-                            if (enemyCollision(this, enemy))
-                            {
-                                enemy._healthSystem.TakeDamage(this._healthSystem.power);                                
-                                //The player steps back after attacking
-                                this.Movement(0, 1);
-                                
-                            }
-                            FinishTurn();
-                        }
+                        moveDir = new Vector2(0, -1); 
+                        keyPress = true;
                     }
+                        
+                    
                 }
                 else if (keyboardState.IsKeyDown(Keys.S))
                 {
                     if (!oldState.IsKeyDown(Keys.S))
                     {
-                        if (checkingForCollision(tileMap, '#', this, 0, 1) || checkingForCollision(tileMap, '$', this, 0, 1))
-                        {
-                            //Nothing Happen
-                        }
-                        else
-                        {
-                            Movement(0, 1);                            
-                            //Here checks if after moving, collides with the enemy
-                            if (enemyCollision(this, enemy))
-                            {
-                                enemy._healthSystem.TakeDamage(this._healthSystem.power);
-                                if (!enemy._healthSystem.isStunned) //Check if the enemy is not stunned when is dealing damage, stun the enemy in case is true
-                                    enemy._healthSystem.makeStunned();
-                                else
-                                    enemy._healthSystem.makeUnstunned();
-                                //The player steps back after attacking
-                                this.Movement(0, -1);
-                                
-                            }
-                            FinishTurn();
-
-                        }
+                        moveDir = new Vector2(0, 1); 
+                        keyPress = true;
                     }
+                 
                 }
+
             }
             else if (_healthSystem.isStunned)
             {
@@ -149,8 +88,32 @@ public class Player : Actor
                 _healthSystem.makeUnstunned();
                 FinishTurn();
                 _healthSystem.defaultStatus();
+                keyPress = false;
             }
-        }
+
+            if (keyPress) 
+            {
+                if(checkingForCollision(tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
+                {
+                    moveDir = new Vector2(0, 0);
+                    
+                }
+                else 
+                {
+                    if(CheckForCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, enemy.tilemap_PosX, enemy.tilemap_PosY)) 
+                    {
+                        enemy._healthSystem.TakeDamage(this._healthSystem.power); 
+                        moveDir = new Vector2(0, 0);
+                    }
+                    Movement((int)moveDir.X, (int)moveDir.Y);                    
+                    FinishTurn();
+                }
+                keyPress = false;
+                
+            }
+
+        }        
+
 
         if (waitingPhase) 
         {
