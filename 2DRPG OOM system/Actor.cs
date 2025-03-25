@@ -67,7 +67,7 @@ public class Actor
 
     }
 
-    public virtual void DrawStats(SpriteBatch _spriteBatch) 
+    public virtual void DrawStats(SpriteBatch _spriteBatch, int num, int posY) 
     {
         
     }

@@ -27,12 +27,13 @@ public class Player : Actor
     private KeyboardState oldState;
     public bool waitingPhase = false;
     public float waitingTime = 0;
-    public bool endOfTurn = false; 
+    public bool hasMoved = false; 
 
     private void FinishTurn()
     {        
         waitingPhase = true;
-        waitingTime = 0; 
+        waitingTime = 0;
+        hasMoved = true; 
     }
 
     public override void TurnUpdate(GameTime gameTime)
@@ -40,7 +41,7 @@ public class Player : Actor
         KeyboardState keyboardState = Keyboard.GetState();
 
 
-        if (turn)
+        if (turn & !hasMoved)
         {
             if (active && !_healthSystem.isStunned)
             {
@@ -102,7 +103,7 @@ public class Player : Actor
                 }
                 else 
                 {
-                    for (int i = 0; i < Game1.characters.Count; i++)
+                    for (int i = 1; i < Game1.characters.Count; i++)
                     {
                         if (CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY))
                         {                           
@@ -126,7 +127,8 @@ public class Player : Actor
             if(waitingTime > 2f)             {
                 
                 waitingPhase = false;
-                turn = false; 
+                turn = false;
+                hasMoved = false;
                 waitingTime = 0;
             }
         }
@@ -135,12 +137,12 @@ public class Player : Actor
         oldState = keyboardState;
     }
 
-    public override void DrawStats(SpriteBatch _spriteBatch) 
+    public override void DrawStats(SpriteBatch _spriteBatch, int num, int posY) 
     {
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Player: ", new Vector2(0, 0), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(0, 25), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, 50), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(0, 75), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Player: ", new Vector2(0, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(0, posY + 25), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 50), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(0, posY +75), Color.White);
     }
 
 }

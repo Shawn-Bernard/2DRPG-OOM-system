@@ -55,7 +55,9 @@ namespace _2DRPG_OOM_system
             oldState = Keyboard.GetState();
 
             characters.Add(new Player(10, 1, 3, 3, 3, 3)); 
-            characters.Add( new Enemy(10, 1, 0, 22, 5)); 
+            characters.Add( new Enemy(10, 1, 0, 22, 5));
+            characters.Add(new Enemy(10, 1, 0, 20, 6));
+            characters.Add(new Enemy(10, 1, 0, 15, 8)); 
 
         }
 
@@ -85,7 +87,7 @@ namespace _2DRPG_OOM_system
                 tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             }
 
-            if (characters[0].turn)
+            if (!((Player)characters[0]).hasMoved)
                 whosTurn = "Player Turn";
             else
                 whosTurn = "Enemies Turn"; 
@@ -125,38 +127,24 @@ namespace _2DRPG_OOM_system
                 characters[1].active = false;
             }
 
-            // Draw the enemy
-            if (characters[1]._healthSystem.life > 0)
-                _spriteBatch.Draw(mapTexture, new Rectangle(characters[1].tilemap_PosX * tileSize * 2, (characters[1].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(2 * tileSize, 10 * tileSize, tileSize, tileSize), Color.White);
-            else
+            // Draw the enemy           
+
+            for(int i = 1; i < characters.Count; i++) 
             {
-                _spriteBatch.DrawString(mySpriteFont, "YOU WON!!", new Vector2(300, 0), Color.White); // Write the message if you win
-                characters[1].active = false;  // The enemy is defeated.
-                
+                if (characters[i]._healthSystem.life > 0)
+                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(2 * tileSize, 10 * tileSize, tileSize, tileSize), Color.White);
             }
 
             _spriteBatch.DrawString(mySpriteFont, whosTurn, new Vector2(300f, 60f), Color.White);
+                                   
 
-
-            // Draw the UI, stats for the player 
-            /*_spriteBatch.DrawString(mySpriteFont, "Player: ", new Vector2(0, 0), Color.White); 
-            _spriteBatch.DrawString(mySpriteFont, "HP: " + characters[0]._healthSystem.health + " Shield: " + characters[0]._healthSystem.shield + " Life: " +
-                characters[0]._healthSystem.life ,  new Vector2(0, 30), Color.White);
-            _spriteBatch.DrawString(mySpriteFont, "Status: " + characters[0]._healthSystem.status, new Vector2(0, 60), Color.White);*/
-
-            characters[0].DrawStats(_spriteBatch); 
-
-            // Draw the UI, stats for the enemy
-             /*
-            _spriteBatch.DrawString(mySpriteFont, "Enemy: ", new Vector2(600, 0), Color.White);
-            _spriteBatch.DrawString(mySpriteFont, "HP: " + characters[1]._healthSystem.health + " Shield: " + characters[1]._healthSystem.shield, 
-                new Vector2(600, 30), Color.White);
-            _spriteBatch.DrawString(mySpriteFont, "Status: " + characters[1]._healthSystem.status, new Vector2(600, 60), Color.White); */
+            characters[0].DrawStats(_spriteBatch, 1, 0); 
+                        
 
             for(int i = 1; i < characters.Count; i++) 
             {
                 if (characters[i] is Enemy)
-                    ((Enemy)characters[1]).DrawEnemiesStats(_spriteBatch, i, (i - 1) * 40);
+                    ((Enemy)characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);
             }
 
             _spriteBatch.End();

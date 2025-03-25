@@ -33,7 +33,7 @@ public class Enemy : Actor
     {
         // This is the AI for the movement for the enemies which is at random
         string _typeOfMovement = "";
-        System.Random random = new System.Random();
+        Random random = new Random();
         int accN = random.Next(0, 4);
 
         switch (accN) 
@@ -58,13 +58,7 @@ public class Enemy : Actor
         return _typeOfMovement;
 
     }
-
-    public async void waitHandler()
-    {
-        //This makes a little delay to prevent the enemy to move inmediatly after the player moves
-        await Task.Delay(2000);
-    }
-
+       
     
 
     public override void TurnUpdate(GameTime gameTime) 
@@ -74,8 +68,7 @@ public class Enemy : Actor
             // Checks if the enemy is still alive
             if (active && !_healthSystem.isStunned)
             {
-                _healthSystem.defaultStatus();
-                waitHandler();
+                _healthSystem.defaultStatus();               
                 eMovement = TypeOfMovement(); // Get a random movement base on the AI method
 
                 switch (eMovement)
@@ -129,10 +122,10 @@ public class Enemy : Actor
         
     }
 
-    public void DrawEnemiesStats(SpriteBatch _spriteBatch, int num, int posY)
+    public override void DrawStats(SpriteBatch _spriteBatch, int num, int posY)
     {
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Enemy " + num + ": ", new Vector2(100, posY), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(100, posY + 20), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Enemy " + num + ": ", new Vector2(600, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(600, posY + 20), Color.White);
     }
 
 
