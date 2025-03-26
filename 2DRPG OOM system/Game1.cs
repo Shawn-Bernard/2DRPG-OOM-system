@@ -60,7 +60,9 @@ namespace _2DRPG_OOM_system
             characters.Add(new Spider(10, 1, 0, 20, 6));
             characters.Add(new Ghost(10, 1, 0, 15, 8));
 
-            itemsOnMap.Add(new Potion(new Vector2(4, 6))); 
+            itemsOnMap.Add(new Potion(new Vector2(4, 6)));
+            itemsOnMap.Add(new Potion(new Vector2(8, 7)));
+            
 
         }
 

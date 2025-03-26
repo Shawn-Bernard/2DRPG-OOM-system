@@ -60,7 +60,7 @@ public class HealthSystem
         // This make the calculation when the actor receives damage. Both health and shield can't be negative, the shield should receive the damage first
         if(damage > shield) 
         {
-            if(damage - shield > health) 
+            if(damage - shield > health || damage - shield == health) 
             {
                 // When the actor's hp reaches to 0, revive should be triggered
                 health = 0; 

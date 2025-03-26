@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 
 public class Player : Actor
@@ -29,6 +30,7 @@ public class Player : Actor
     private KeyboardState oldState;
     public bool waitingPhase = false;  
     public bool keyPress;
+    public List<Item> inventory = new List<Item>(); 
 
     private void FinishTurn()
     {        
@@ -44,7 +46,7 @@ public class Player : Actor
 
         if (turn & !hasMoved)
         {
-            if (active && !_healthSystem.isStunned)
+            if (active) // && !_healthSystem.isStunned)
             {
                 moveDir = new Vector2(0, 0); 
                 _healthSystem.defaultStatus();
@@ -86,6 +88,7 @@ public class Player : Actor
                 }
 
             }
+            /*
             else if (_healthSystem.isStunned)
             {
                 //When you are stunned, your turn is skipped but your make unstunned
@@ -93,7 +96,7 @@ public class Player : Actor
                 FinishTurn();
                 _healthSystem.defaultStatus();
                 keyPress = false;
-            }
+            }*/
 
             if (keyPress) 
             {
@@ -117,7 +120,7 @@ public class Player : Actor
                     {
                         if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y)) 
                         {
-                            Game1.itemsOnMap[i].itemEffect(); 
+                            pickItem(Game1.itemsOnMap[i]); 
                         }
                     }
 
@@ -134,7 +137,7 @@ public class Player : Actor
         if (waitingPhase) 
         {
             waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if(waitingTime > 2f)             {
+            if(waitingTime > 0.5f)             {
                 
                 waitingPhase = false;
                 turn = false;
@@ -153,7 +156,20 @@ public class Player : Actor
         _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(0, posY + 25), Color.White);
         _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 50), Color.White);
         _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(0, posY +75), Color.White);
+        
+        for(int i = 0; i < inventory.Count; i++) 
+        {
+            _spriteBatch.DrawString(Game1.mySpriteFont, inventory[i].name, new Vector2(i * 75, posY + 100), Color.White);
+        }
     }
+
+    public void pickItem(Item _item) 
+    {
+        inventory.Add(_item); 
+        Game1.itemsOnMap.Remove(_item);
+        _item.isPickUp = true; 
+    }
+
 
 }
 
