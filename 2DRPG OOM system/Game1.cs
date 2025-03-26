@@ -3,9 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+using System.Security.Cryptography.X509Certificates;
+
 
 namespace _2DRPG_OOM_system
 {
@@ -13,7 +12,7 @@ namespace _2DRPG_OOM_system
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;        
-        private Texture2D mapTexture; 
+        public static Texture2D mapTexture; 
         // Creating the Actors: The player and the enemy
         //public static Player myPlayer = new Player(10, 1, 3, 3, 3, 3);
         //public Enemy theEnemy = new Enemy(10, 1, 0, 22, 5);
@@ -21,7 +20,7 @@ namespace _2DRPG_OOM_system
 
         public bool myTurn = true;
         // This determine the size the tiles are going to have        
-        public int tileSize = 16;
+        public static int tileSize = 16;
 
         public static SpriteFont mySpriteFont;
         // Creating the Tilemap 
@@ -34,7 +33,9 @@ namespace _2DRPG_OOM_system
         public string whosTurn;
         public string turnDisplay;
 
-        public TurnManager turnManager = new TurnManager(); 
+        public TurnManager turnManager = new TurnManager();
+        public static List<Item> itemsOnMap = new List<Item>();
+        
 
         public Game1()
         {
@@ -55,9 +56,11 @@ namespace _2DRPG_OOM_system
             oldState = Keyboard.GetState();
 
             characters.Add(new Player(10, 1, 3, 3, 3, 3)); 
-            characters.Add( new Enemy(10, 1, 0, 22, 5));
-            characters.Add(new Enemy(10, 1, 0, 20, 6));
-            characters.Add(new Enemy(10, 1, 0, 15, 8)); 
+            characters.Add( new Spider(10, 1, 0, 22, 5));
+            characters.Add(new Spider(10, 1, 0, 20, 6));
+            characters.Add(new Ghost(10, 1, 0, 15, 8));
+
+            itemsOnMap.Add(new Potion(new Vector2(4, 6))); 
 
         }
 
@@ -87,11 +90,25 @@ namespace _2DRPG_OOM_system
                 tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             }
 
-            if (!((Player)characters[0]).hasMoved)
-                whosTurn = "Player Turn";
-            else
-                whosTurn = "Enemies Turn"; 
+            for(int i = 0; i < characters.Count; i++) 
+            {
+                if (characters[i]._healthSystem.life <= 0)
+                    characters.Remove(characters[i]); 
+            }
 
+            if (characters[0]._healthSystem.life > 0)
+            {
+                if (!((Player)characters[0]).hasMoved)
+                    whosTurn = "Player Turn";
+                else
+                    whosTurn = "Enemies Turn";
+            }
+
+            for(int i = 0; i < itemsOnMap.Count; i++) 
+            {
+                if (itemsOnMap[i].isUsed)
+                    itemsOnMap.Remove(itemsOnMap[i]); 
+            }
 
             base.Update(gameTime);
             
@@ -118,27 +135,37 @@ namespace _2DRPG_OOM_system
             }
 
             // Draw the player
-            if (characters[0]._healthSystem.life > 0)
-                _spriteBatch.Draw(mapTexture, new Rectangle(characters[0].tilemap_PosX * tileSize * 2, (characters[0].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(1 * tileSize, 8 * tileSize, tileSize, tileSize), Color.White);
-            else
+            if (characters[0] is Player)
             {
-                _spriteBatch.DrawString(mySpriteFont, "You Lose!!", new Vector2(300, 0), Color.White);  // Write the message if you lose
-                characters[0].active = false;  // Neither the player nor the enemy cannot move.
-                characters[1].active = false;
+                if (characters[0]._healthSystem.life > 0)
+                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[0].tilemap_PosX * tileSize * 2, (characters[0].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[0].cropPositionX * tileSize, characters[0].cropPositionY * tileSize, tileSize, tileSize), Color.White);
+                else
+                {
+                    _spriteBatch.DrawString(mySpriteFont, "You Lose!!", new Vector2(300, 0), Color.White);  // Write the message if you lose
+                    characters[0].active = false;  // Neither the player nor the enemy cannot move.
+                    characters[1].active = false;
+                }
             }
 
             // Draw the enemy           
 
             for(int i = 1; i < characters.Count; i++) 
             {
-                if (characters[i]._healthSystem.life > 0)
-                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(2 * tileSize, 10 * tileSize, tileSize, tileSize), Color.White);
+                if (characters[i]._healthSystem.life > 0 && characters[i] is Enemy)
+                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[i].cropPositionX * tileSize, characters[i].cropPositionY * tileSize, tileSize, tileSize), Color.White);
             }
 
             _spriteBatch.DrawString(mySpriteFont, whosTurn, new Vector2(300f, 60f), Color.White);
                                    
 
-            characters[0].DrawStats(_spriteBatch, 1, 0); 
+            characters[0].DrawStats(_spriteBatch, 1, 0);
+
+
+
+            for(int i = 0; i < itemsOnMap.Count; i++) 
+            {
+                itemsOnMap[i].DrawItem(_spriteBatch); 
+            } 
                         
 
             for(int i = 1; i < characters.Count; i++) 

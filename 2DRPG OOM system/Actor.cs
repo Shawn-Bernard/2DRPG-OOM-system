@@ -31,11 +31,18 @@ public class Actor
 
     // This is the actor turn
     public bool turn;
-    public bool keyPress; 
+    public float waitingTime = 0;
+    public bool hasMoved = false;
+
+    public int cropPositionX;
+    public int cropPositionY; 
+
 
     // Movement
     public Vector2 moveDir;
     public Vector2 facingDir; 
+
+
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForObjCollision(int Xo, int Yo, int Xt, int Yt) 

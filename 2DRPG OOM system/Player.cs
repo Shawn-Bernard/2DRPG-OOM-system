@@ -22,12 +22,13 @@ public class Player : Actor
         _healthSystem.setMaxHP(hp);
         _healthSystem.setMaxShield(shld);
         keyPress = false;
+        cropPositionX = 1;
+        cropPositionY = 8; 
     }
 
     private KeyboardState oldState;
-    public bool waitingPhase = false;
-    public float waitingTime = 0;
-    public bool hasMoved = false; 
+    public bool waitingPhase = false;  
+    public bool keyPress;
 
     private void FinishTurn()
     {        
@@ -111,6 +112,15 @@ public class Player : Actor
                             moveDir = new Vector2(0, 0);
                         }
                     }
+
+                    for(int i = 0; i < Game1.itemsOnMap.Count; i++) 
+                    {
+                        if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y)) 
+                        {
+                            Game1.itemsOnMap[i].itemEffect(); 
+                        }
+                    }
+
                     Movement((int)moveDir.X, (int)moveDir.Y);                    
                     FinishTurn();
                 }
