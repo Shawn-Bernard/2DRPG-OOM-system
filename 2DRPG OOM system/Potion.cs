@@ -10,7 +10,7 @@ public class Potion : Item
 {
     public Potion(Vector2 itemPos) 
     {
-        cropPosX = 7;
+        cropPosX = 8;
         cropPosY = 9;
         name = "Potion";
         description = "The potion heals the player 5 hp";
@@ -24,7 +24,7 @@ public class Potion : Item
         if (!isUsed)
         {
             if (Game1.characters[0] is Player)
-                Game1.characters[0]._healthSystem.health += 5;
+                Game1.characters[0]._healthSystem.RecoverHealth(5);
 
             isUsed = true;
         }

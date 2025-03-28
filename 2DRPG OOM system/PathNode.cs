@@ -9,7 +9,7 @@ public class PathNode
 {
     // H Cost is the distance from end node
     // F Cost is the distance from starting node
-    // F Cost is H Cost + F Cost
+    // G Cost is H Cost + F Cost
     public int HCost, FCost, GCost;
     public Point position, exploreFrom;
     public bool calculated, isWalkable, hasClosed = false; 

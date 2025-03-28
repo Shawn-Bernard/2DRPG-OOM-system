@@ -32,7 +32,7 @@ public class Player : Actor
     public bool keyPress;
     public List<Item> inventory = new List<Item>(); 
 
-    private void FinishTurn()
+    public void FinishTurn()
     {        
         waitingPhase = true;
         waitingTime = 0;
@@ -86,6 +86,21 @@ public class Player : Actor
                     }
                  
                 }
+                else if (keyboardState.IsKeyDown(Keys.I)) 
+                {
+                    if (!oldState.IsKeyDown(Keys.I)) 
+                    {
+                        if(inventory.Count > 0 && inventory[0] != null) 
+                        {
+                            inventory[0].itemEffect();
+                            if (inventory[0].isUsed)
+                                inventory.Remove(inventory[0]);
+                                                         
+                            FinishTurn();
+                            keyPress = false;
+                        }
+                    }
+                }
 
             }
             /*
@@ -97,6 +112,9 @@ public class Player : Actor
                 _healthSystem.defaultStatus();
                 keyPress = false;
             }*/
+
+            
+
 
             if (keyPress) 
             {
@@ -116,6 +134,7 @@ public class Player : Actor
                         }
                     }
 
+                    // Check if the player collides with a pickup item
                     for(int i = 0; i < Game1.itemsOnMap.Count; i++) 
                     {
                         if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y)) 
@@ -145,7 +164,10 @@ public class Player : Actor
                 waitingTime = 0;
             }
         }
-                
+
+        // Here it checks if the player collides with the door while there is no enemies to generate a new map
+        if (Game1.characters.Count < 2 && Game1.characters[0] is Player && checkingForCollision(Game1.tileMap, '@', this, 0, 0))
+            changeMap(); 
 
         oldState = keyboardState;
     }
@@ -159,7 +181,7 @@ public class Player : Actor
         
         for(int i = 0; i < inventory.Count; i++) 
         {
-            _spriteBatch.DrawString(Game1.mySpriteFont, inventory[i].name, new Vector2(i * 75, posY + 100), Color.White);
+            _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(inventory[i].cropPosX * Game1.tileSize, inventory[i].cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize) , Color.White);
         }
     }
 
@@ -168,6 +190,15 @@ public class Player : Actor
         inventory.Add(_item); 
         Game1.itemsOnMap.Remove(_item);
         _item.isPickUp = true; 
+    }
+
+
+    public void changeMap() 
+    {
+        tilemap_PosX = 3;
+        tilemap_PosY = 3;
+        Game1.mString = Game1.tileMap.GenerateMapString(25, 10);        
+        Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
     }
 
 

@@ -26,53 +26,36 @@ public class Spider : Enemy
         cropPositionY = 10;
     }
 
+    public PathNode nextMove = new PathNode();  
+    public Pathfinder _pathfinder = new Pathfinder();
+
     public override void TurnUpdate(GameTime gameTime)
     {
+        if (Game1.characters[0] is Player)
+        _pathfinder.InitializePathfinding(Game1.tileMap.multidimensionalMap, new Point(tilemap_PosX, tilemap_PosY), new Point(Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY));
+
+        _pathfinder.ExploringNode();
+
+        if (_pathfinder.exploredNodes.Count > 1 && _pathfinder.exploredNodes[1] != null)
+        nextMove = _pathfinder.exploredNodes[1]; 
+
         if (turn)
         {
             // Checks if the enemy is still alive
             if (active && !_healthSystem.isStunned)
             {
-                _healthSystem.defaultStatus();
-                eMovement = TypeOfMovement(); // Get a random movement base on the AI method
-
-                switch (eMovement)
+                if (CheckForObjCollision(tilemap_PosX + nextMove.X, tilemap_PosY + nextMove.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY))
                 {
-                    //Base on the direction, the enemy will move in the corresponding direction
-                    case "Right":
-                        moveDir = new Vector2(1, 0);
-                        break;
-                    case "Left":
-                        moveDir = new Vector2(-1, 0);
-                        break;
-                    case "Up":
-                        moveDir = new Vector2(0, -1);
-                        break;
-                    case "Down":
-                        moveDir = new Vector2(0, 1);
-                        break;
-                    default:
-                        { // do nothing
-                            moveDir = new Vector2(0, 0);
-                            break;
-                        }
+                    Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
+                    
+                }
+                else 
+                {
+                    tilemap_PosX = nextMove.X;
+                    tilemap_PosY = nextMove.Y;
                 }
 
-                if (checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(Game1.tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y))
-                {
-                    moveDir = new Vector2(0, 0);
-                }
-                else
-                {
-                    if (CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY))
-                    {
-                        Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
-                        moveDir = new Vector2(0, 0);
-                    }
-
-                    Movement((int)moveDir.X, (int)moveDir.Y);
-                    turn = false;
-                }
+                turn = false;
 
             }
             else if (_healthSystem.isStunned)

@@ -101,7 +101,7 @@ public class Pathfinder
                 else 
                 {
                     // this is a neighbour
-                    if (!unexploredNodes.Contains(checkingNode) && !unexploredNodes.Contains(checkingNode))
+                    if (!checkingNode.hasClosed && !unexploredNodes.Contains(checkingNode))
                     {
                         unexploredNodes.Add(checkingNode);
                     }

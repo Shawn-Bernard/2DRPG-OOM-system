@@ -25,7 +25,7 @@ namespace _2DRPG_OOM_system
         public static SpriteFont mySpriteFont;
         // Creating the Tilemap 
         public static Tilemap tileMap = new Tilemap();
-        private string mString;
+        public static string mString;
         private KeyboardState oldState;
 
         // This string will contain the text from the text file
@@ -56,12 +56,15 @@ namespace _2DRPG_OOM_system
             oldState = Keyboard.GetState();
 
             characters.Add(new Player(10, 1, 3, 3, 3, 3)); 
-            characters.Add( new Spider(10, 1, 0, 22, 5));
-            characters.Add(new Spider(10, 1, 0, 20, 6));
-            characters.Add(new Ghost(10, 1, 0, 15, 8));
+            //characters.Add( new Spider(10, 1, 0, 22, 5));
+            //characters.Add(new Spider(10, 1, 0, 20, 6));
+            characters.Add(new Ghost(10, 5, 0, 15, 8));
+            characters.Add(new Ghost(10, 1, 0, 22, 5));
 
             itemsOnMap.Add(new Potion(new Vector2(4, 6)));
             itemsOnMap.Add(new Potion(new Vector2(8, 7)));
+            itemsOnMap.Add(new FireballScroll(new Vector2(10, 3)));
+            itemsOnMap.Add(new LightningScroll(new Vector2(2, 8))); 
             
 
         }
@@ -82,15 +85,7 @@ namespace _2DRPG_OOM_system
             // This is the logic for the turns                        
             turnManager.UpdateTurnManager(gameTime);
 
-
-            // Here it checks if the player collides with the door to generate a new map
-            if (characters[0].checkingForCollision(tileMap, '@', characters[0], 0, 0))
-            {
-                characters[0].tilemap_PosX = 3;
-                characters[0].tilemap_PosY = 3;
-                mString = tileMap.GenerateMapString(25, 10);
-                tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
-            }
+                       
 
             for(int i = 0; i < characters.Count; i++) 
             {
@@ -163,7 +158,7 @@ namespace _2DRPG_OOM_system
             characters[0].DrawStats(_spriteBatch, 1, 0);
 
 
-
+            // Draw all the items that are in the tilemap
             for(int i = 0; i < itemsOnMap.Count; i++) 
             {
                 itemsOnMap[i].DrawItem(_spriteBatch); 
