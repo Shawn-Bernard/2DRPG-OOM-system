@@ -35,8 +35,9 @@ namespace _2DRPG_OOM_system
 
         public TurnManager turnManager = new TurnManager();
         public static List<Item> itemsOnMap = new List<Item>();
-        
 
+        public static List<Projectile> projectiles = new List<Projectile>();
+        
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -57,16 +58,27 @@ namespace _2DRPG_OOM_system
 
             characters.Add(new Player(10, 1, 3, 3, 3, 3)); 
             //characters.Add( new Spider(10, 1, 0, 22, 5));
-            //characters.Add(new Spider(10, 1, 0, 20, 6));
+            characters.Add(new DarkMage(10, 1, 0, 20, 6));
             characters.Add(new Ghost(10, 5, 0, 15, 8));
             characters.Add(new Ghost(10, 1, 0, 22, 5));
 
             itemsOnMap.Add(new Potion(new Vector2(4, 6)));
             itemsOnMap.Add(new Potion(new Vector2(8, 7)));
             itemsOnMap.Add(new FireballScroll(new Vector2(10, 3)));
-            itemsOnMap.Add(new LightningScroll(new Vector2(2, 8))); 
-            
+            itemsOnMap.Add(new LightningScroll(new Vector2(2, 8)));
 
+            //projectiles.Add(new FireBall(new Vector2(4, 3), new Vector2(1, 0), Color.Red));
+
+            /*
+            for(int i = 0; i < characters.Count; i++) 
+            {
+                if (characters[i] is Spider)
+                {
+                    ((Spider)characters[i])._pathfinder.InitializePathfinding(tileMap.multidimensionalMap, new Point(characters[i].tilemap_PosX, characters[i].tilemap_PosY), new Point(characters[0].tilemap_PosX, characters[0].tilemap_PosY));
+                }
+            }*/
+
+             
         }
 
         protected override void LoadContent()
@@ -85,9 +97,18 @@ namespace _2DRPG_OOM_system
             // This is the logic for the turns                        
             turnManager.UpdateTurnManager(gameTime);
 
-                       
+            for (int i = 0; i < projectiles.Count; i++)
+                projectiles[i].ProjectileUpdate(gameTime);
 
-            for(int i = 0; i < characters.Count; i++) 
+            for (int i = 0; i < projectiles.Count; i++) {
+                if (projectiles[i].hit) 
+                {
+                    projectiles.Remove(projectiles[i]);
+                }
+            }
+
+
+            for (int i = 0; i < characters.Count; i++) 
             {
                 if (characters[i]._healthSystem.life <= 0)
                     characters.Remove(characters[i]); 
@@ -95,7 +116,7 @@ namespace _2DRPG_OOM_system
 
             if (characters[0]._healthSystem.life > 0)
             {
-                if (!((Player)characters[0]).hasMoved)
+                if (((Player)characters[0]).turn && !((Player)characters[0]).hasMoved)
                     whosTurn = "Player Turn";
                 else
                     whosTurn = "Enemies Turn";
@@ -149,7 +170,7 @@ namespace _2DRPG_OOM_system
             for(int i = 1; i < characters.Count; i++) 
             {
                 if (characters[i]._healthSystem.life > 0 && characters[i] is Enemy)
-                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[i].cropPositionX * tileSize, characters[i].cropPositionY * tileSize, tileSize, tileSize), Color.White);
+                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[i].cropPositionX * tileSize, characters[i].cropPositionY * tileSize, tileSize, tileSize), characters[i].AColor);
             }
 
             _spriteBatch.DrawString(mySpriteFont, whosTurn, new Vector2(300f, 60f), Color.White);
@@ -163,9 +184,18 @@ namespace _2DRPG_OOM_system
             {
                 itemsOnMap[i].DrawItem(_spriteBatch); 
             } 
-                        
 
-            for(int i = 1; i < characters.Count; i++) 
+            //for(int i = 0; i < ((Spider)characters[1])._pathfinder.exploredNodes.Count; i++)
+                //{
+                //_spriteBatch.Draw(mapTexture, new Rectangle(((Spider)characters[1])._pathfinder.exploredNodes[i].X * tileSize * 2, (((Spider)characters[1])._pathfinder.exploredNodes[i].Y + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(10 * tileSize, 6 * tileSize, tileSize, tileSize), Color.White); 
+            //}
+
+            // Draw the projectiles
+            for(int i = 0; i < projectiles.Count; i++)
+            _spriteBatch.Draw(mapTexture, new Rectangle(projectiles[i].X * tileSize * 2, (projectiles[i].Y + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(projectiles[i].cropX * tileSize, projectiles[i].cropY * tileSize, tileSize, tileSize), projectiles[i].pColor); 
+
+
+            for (int i = 1; i < characters.Count; i++) 
             {
                 if (characters[i] is Enemy)
                     ((Enemy)characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);

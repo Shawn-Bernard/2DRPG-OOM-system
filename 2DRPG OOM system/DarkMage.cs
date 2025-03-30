@@ -1,15 +1,15 @@
-﻿using _2DRPG_OOM_system;
-using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
 
 
-public class Ghost : Enemy
+public class DarkMage : Enemy
 {
-    public Ghost(int hp, int atk, int shld, int iPosX, int iPosY) 
+    public DarkMage(int hp, int atk, int shld, int iPosX, int iPosY) 
     {
         _healthSystem.health = hp;
         _healthSystem.power = atk;
@@ -23,9 +23,9 @@ public class Ghost : Enemy
         active = true;
         turn = true;
         _healthSystem.status = "Normal";
-        cropPositionX = 1;
-        cropPositionY = 10;
-        AColor = Color.White; 
+        cropPositionX = 3;
+        cropPositionY = 9;
+        AColor = Color.White;
     }
 
     int mvX;
@@ -34,7 +34,7 @@ public class Ghost : Enemy
     public override void TurnUpdate(GameTime gameTime)
     {
 
-        
+
         if (turn && !hasMoved)
         {
             // Checks if the enemy is still alive
@@ -57,19 +57,39 @@ public class Ghost : Enemy
                 else
                     mvY = 0;
 
-                if (Math.Abs(mvX) == 1 && Math.Abs(mvY) == 1)
-                    mvX = 0;
+                if (Math.Abs(mvX) == 1 && Math.Abs(mvY) == 1) 
+                {
+                    if (checkingForCollision(Game1.tileMap, '#', this, mvX, 0) || checkingForCollision(Game1.tileMap, '$', this, mvX, 0))
+                    {
+                        mvX = 0;
+                    }
+                    else if (checkingForCollision(Game1.tileMap, '#', this, 0, mvY) || checkingForCollision(Game1.tileMap, '$', this, 0, mvY))
+                    {
+                        mvY = 0;
+                    }
+                    else 
+                    {
+                        mvX = 0; 
+                    }
+                }
+                    
 
 
                 if (CheckForObjCollision(tilemap_PosX + mvX, tilemap_PosY + mvY, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY) && Game1.characters[0] is Player)
                 {
                     Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
                     mvX = 0;
+                    mvY = 0;
+                }
+
+                if(checkingForCollision(Game1.tileMap, '#', this, mvX, mvY) || checkingForCollision(Game1.tileMap, '$', this, mvX, mvY)) 
+                {
+                    mvX = 0;
                     mvY = 0; 
                 }
 
                 Movement(mvX, mvY);
-                FinishTurn(); 
+                FinishTurn();
             }
             else if (_healthSystem.isStunned)
             {
@@ -79,6 +99,7 @@ public class Ghost : Enemy
                 FinishTurn();
 
             }
+            Game1.projectiles.Add(new FireBall(new Vector2(tilemap_PosX + mvX, tilemap_PosY + mvY), new Vector2(mvX, mvY), Color.Purple));
         }
 
         if (waitingPhase)
@@ -87,5 +108,6 @@ public class Ghost : Enemy
         }
 
     }
+
 }
 

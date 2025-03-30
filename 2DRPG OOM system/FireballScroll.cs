@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,12 @@ public class FireballScroll : Item
     {
         if (!isUsed) 
         {
+            Game1.projectiles.Add(new FireBall(new Vector2(Game1.characters[0].tilemap_PosX + Game1.characters[0].facingDir.X,
+                                                             Game1.characters[0].tilemap_PosY + Game1.characters[0].facingDir.Y),
+                                                             Game1.characters[0].facingDir, Color.Red));
+                                                             
 
+            isUsed = true;
         }
     }
 

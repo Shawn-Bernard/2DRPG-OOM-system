@@ -20,10 +20,11 @@ public class Spider : Enemy
         _healthSystem.setMaxShield(shld);
         _healthSystem.isStunned = false;
         active = true;
-        turn = false;
+        turn = true;
         _healthSystem.status = "Normal";
         cropPositionX = 2;
         cropPositionY = 10;
+        AColor = Color.White; 
     }
 
     public PathNode nextMove = new PathNode();  
@@ -31,15 +32,23 @@ public class Spider : Enemy
 
     public override void TurnUpdate(GameTime gameTime)
     {
-        if (Game1.characters[0] is Player)
         _pathfinder.InitializePathfinding(Game1.tileMap.multidimensionalMap, new Point(tilemap_PosX, tilemap_PosY), new Point(Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY));
 
-        _pathfinder.ExploringNode();
+        _pathfinder.BestPath.Clear(); 
 
-        if (_pathfinder.exploredNodes.Count > 1 && _pathfinder.exploredNodes[1] != null)
-        nextMove = _pathfinder.exploredNodes[1]; 
+        _pathfinder.ExploringNode();        
 
-        if (turn)
+
+        if (_pathfinder.BestPath.Count > 1 )//&& _pathfinder.BestPath[1] != null)
+            nextMove = _pathfinder.getTheBestPath(_pathfinder.exploredNodes);
+
+        if (_healthSystem.isStunned)
+            AColor = Color.Yellow;
+        else
+            AColor = Color.White; 
+
+
+        if (turn && !hasMoved)
         {
             // Checks if the enemy is still alive
             if (active && !_healthSystem.isStunned)
@@ -55,18 +64,22 @@ public class Spider : Enemy
                     tilemap_PosY = nextMove.Y;
                 }
 
-                turn = false;
+                FinishTurn();
 
             }
             else if (_healthSystem.isStunned)
             {
                 //When the enemy is stunned, enemy's turn is skipped and make the enemy unstunned
                 _healthSystem.makeUnstunned();
-                turn = false;
+               FinishTurn();
 
             }
         }
 
+        if (waitingPhase)
+        {
+            waitingTurnToFinish(2f, gameTime);
+        }
 
     }
 }

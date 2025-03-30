@@ -32,6 +32,7 @@ public class Actor
     // This is the actor turn
     public bool turn;
     public float waitingTime = 0;
+    public bool waitingPhase;
     public bool hasMoved = false;
 
     public int cropPositionX;
@@ -40,8 +41,9 @@ public class Actor
 
     // Movement
     public Vector2 moveDir;
-    public Vector2 facingDir; 
+    public Vector2 facingDir;
 
+    public Color AColor; 
 
 
     // This check if two objects are colliding, is will ask two position (x,y)
@@ -77,6 +79,26 @@ public class Actor
     public virtual void DrawStats(SpriteBatch _spriteBatch, int num, int posY) 
     {
         
+    }
+
+    public void FinishTurn()
+    {
+        waitingPhase = true;
+        waitingTime = 0;
+        hasMoved = true;
+    }
+
+    public void waitingTurnToFinish(float _time, GameTime _gameTime) 
+    {
+        waitingTime += (float)_gameTime.ElapsedGameTime.TotalSeconds;
+        if (waitingTime > _time)
+        {
+
+            waitingPhase = false;
+            turn = false;
+            hasMoved = false;
+            waitingTime = 0;
+        }
     }
 
 }

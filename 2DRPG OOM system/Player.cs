@@ -19,25 +19,20 @@ public class Player : Actor
         _healthSystem.isStunned = false;
         active = true;
         turn = true;
+        waitingPhase = false;
         _healthSystem.status = "Normal";
         _healthSystem.setMaxHP(hp);
         _healthSystem.setMaxShield(shld);
         keyPress = false;
         cropPositionX = 1;
         cropPositionY = 8; 
+        AColor = Color.White;
     }
 
-    private KeyboardState oldState;
-    public bool waitingPhase = false;  
+    private KeyboardState oldState;     
     public bool keyPress;
     public List<Item> inventory = new List<Item>(); 
-
-    public void FinishTurn()
-    {        
-        waitingPhase = true;
-        waitingTime = 0;
-        hasMoved = true; 
-    }
+       
 
     public override void TurnUpdate(GameTime gameTime)
     {
@@ -54,7 +49,8 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.A))
                     {
-                        moveDir = new Vector2(-1, 0); 
+                        moveDir = new Vector2(-1, 0);
+                        facingDir = moveDir; 
                         keyPress = true;
                     }
                     
@@ -64,6 +60,7 @@ public class Player : Actor
                     if (!oldState.IsKeyDown(Keys.D))
                     {
                         moveDir = new Vector2(1, 0); 
+                        facingDir = moveDir;
                         keyPress = true;
                     }
                 }
@@ -72,6 +69,7 @@ public class Player : Actor
                     if (!oldState.IsKeyDown(Keys.W))
                     {
                         moveDir = new Vector2(0, -1); 
+                        facingDir = moveDir;
                         keyPress = true;
                     }
                         
@@ -82,54 +80,68 @@ public class Player : Actor
                     if (!oldState.IsKeyDown(Keys.S))
                     {
                         moveDir = new Vector2(0, 1); 
+                        facingDir=moveDir;
                         keyPress = true;
                     }
                  
                 }
-                else if (keyboardState.IsKeyDown(Keys.I)) 
+                else if (keyboardState.IsKeyDown(Keys.D1)) 
                 {
-                    if (!oldState.IsKeyDown(Keys.I)) 
+                    if (!oldState.IsKeyDown(Keys.D1)) 
                     {
-                        if(inventory.Count > 0 && inventory[0] != null) 
-                        {
-                            inventory[0].itemEffect();
-                            if (inventory[0].isUsed)
-                                inventory.Remove(inventory[0]);
-                                                         
-                            FinishTurn();
-                            keyPress = false;
-                        }
+                        consumeItem(0);
+                    }
+                }
+                else if (keyboardState.IsKeyDown(Keys.D2))
+                {
+                    if (!oldState.IsKeyDown(Keys.D2))
+                    {
+                        consumeItem(1);
+                    }
+                }
+                else if (keyboardState.IsKeyDown(Keys.D3))
+                {
+                    if (!oldState.IsKeyDown(Keys.D3))
+                    {
+                        consumeItem(2);
+                    }
+                }
+                else if (keyboardState.IsKeyDown(Keys.D4))
+                {
+                    if (!oldState.IsKeyDown(Keys.D4))
+                    {
+                        consumeItem(3);
+                    }
+                }
+                else if (keyboardState.IsKeyDown(Keys.D5))
+                {
+                    if (!oldState.IsKeyDown(Keys.D5))
+                    {
+                        consumeItem(4);
                     }
                 }
 
-            }
-            /*
-            else if (_healthSystem.isStunned)
-            {
-                //When you are stunned, your turn is skipped but your make unstunned
-                _healthSystem.makeUnstunned();
-                FinishTurn();
-                _healthSystem.defaultStatus();
-                keyPress = false;
-            }*/
+            }          
 
             
-
-
             if (keyPress) 
             {
                 if(checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(Game1.tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
                 {
                     moveDir = new Vector2(0, 0);
                     
+                    
                 }
                 else 
                 {
                     for (int i = 1; i < Game1.characters.Count; i++)
                     {
+                        // check if the player moves towards an enemy, so it inflict damage instead of moving
                         if (CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY))
-                        {                           
+                        {
+                            if (!(Game1.characters[i] is Ghost))
                             Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
+
                             moveDir = new Vector2(0, 0);
                         }
                     }
@@ -155,14 +167,7 @@ public class Player : Actor
 
         if (waitingPhase) 
         {
-            waitingTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if(waitingTime > 0.5f)             {
-                
-                waitingPhase = false;
-                turn = false;
-                hasMoved = false;
-                waitingTime = 0;
-            }
+            waitingTurnToFinish(2f, gameTime);
         }
 
         // Here it checks if the player collides with the door while there is no enemies to generate a new map
@@ -174,12 +179,23 @@ public class Player : Actor
 
     public override void DrawStats(SpriteBatch _spriteBatch, int num, int posY) 
     {
+        // UI for the player's stats
         _spriteBatch.DrawString(Game1.mySpriteFont, "Player: ", new Vector2(0, posY), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(0, posY + 25), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 50), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(0, posY +75), Color.White);
-        
-        for(int i = 0; i < inventory.Count; i++) 
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(125, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 25), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(125, posY +25), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Inventory", new Vector2(0, posY + 50), Color.White);
+
+        // The UI for the inventory
+        for(int i = 0; i < 5; i++) 
+        {
+            _spriteBatch.DrawString(Game1.mySpriteFont, (i+1).ToString(), new Vector2(12 + 25 * i, posY + 75),  Color.White);            
+            _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(0, 0, Game1.tileSize, Game1.tileSize), Color.White);
+            _spriteBatch.DrawString(Game1.mySpriteFont, "|", new Vector2(i * 25 + 2, posY + 100), Color.White);
+        }
+
+        //The items from the inventory are drawn 
+        for (int i = 0; i < inventory.Count; i++) 
         {
             _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(inventory[i].cropPosX * Game1.tileSize, inventory[i].cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize) , Color.White);
         }
@@ -201,6 +217,18 @@ public class Player : Actor
         Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
     }
 
+    private void consumeItem(int iIndex) 
+    {
+        if (inventory.Count > iIndex && inventory[iIndex] != null)
+        {
+            inventory[iIndex].itemEffect();
+            if (inventory[iIndex].isUsed)
+                inventory.Remove(inventory[iIndex]);
+
+            FinishTurn();
+            keyPress = false;
+        }
+    }
 
 }
 
