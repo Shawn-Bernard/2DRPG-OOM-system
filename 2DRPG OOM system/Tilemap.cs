@@ -158,7 +158,7 @@ using System.Threading.Tasks;
 
     public void getTheIndexes(char tile) 
     {
-        // This determine the coordinates to crop the tilemap image to get the correct Tile
+        // This determine the coordinates to crop the texture image to get the correct Tile
         switch (tile) 
         {
             case '*':

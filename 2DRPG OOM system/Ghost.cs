@@ -22,6 +22,7 @@ public class Ghost : Enemy
         _healthSystem.isStunned = false;
         active = true;
         turn = true;
+        ismyTurn = false; 
         _healthSystem.status = "Normal";
         cropPositionX = 1;
         cropPositionY = 10;
@@ -37,11 +38,13 @@ public class Ghost : Enemy
         
         if (turn && !hasMoved)
         {
-            // Checks if the enemy is still alive
+            // Checks if the enemy is still alive or is not stunned
             if (active && !_healthSystem.isStunned)
             {
+                ismyTurn = true; 
                 AColor = Color.White;
 
+                // this checks for the player position, based on that this will tell if the ghost should go right or left
                 if (Game1.characters[0].tilemap_PosX - tilemap_PosX > 0)
                     mvX = 1;
                 else if (Game1.characters[0].tilemap_PosX - tilemap_PosX < 0)
@@ -49,7 +52,7 @@ public class Ghost : Enemy
                 else
                     mvX = 0;
 
-
+                // this checks for the player position, based on that this will tell if the ghost should go up or down
                 if (Game1.characters[0].tilemap_PosY - tilemap_PosY > 0)
                     mvY = 1;
                 else if (Game1.characters[0].tilemap_PosY - tilemap_PosY < 0)
@@ -57,19 +60,23 @@ public class Ghost : Enemy
                 else
                     mvY = 0;
 
+                // This disable the ghost for moving diagonally 
                 if (Math.Abs(mvX) == 1 && Math.Abs(mvY) == 1)
                     mvX = 0;
 
-
-                if (CheckForObjCollision(tilemap_PosX + mvX, tilemap_PosY + mvY, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY) && Game1.characters[0] is Player)
+                // Check if its going to collide with the player, so inflict damage instead of moving
+                for (int i = 0; i < Game1.characters.Count; i++)
                 {
-                    Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
-                    mvX = 0;
-                    mvY = 0; 
+                    if (CheckForObjCollision(tilemap_PosX + mvX, tilemap_PosY + mvY, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY) && Game1.characters[i] is Player)
+                    {
+                        Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
+                        mvX = 0;
+                        mvY = 0;
+                    }
                 }
 
-                Movement(mvX, mvY);
-                FinishTurn(); 
+                Movement(mvX, mvY);  // it moves
+                FinishTurn();       
             }
             else if (_healthSystem.isStunned)
             {

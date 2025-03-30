@@ -21,6 +21,7 @@ public class Spider : Enemy
         _healthSystem.isStunned = false;
         active = true;
         turn = true;
+        ismyTurn = false; 
         _healthSystem.status = "Normal";
         cropPositionX = 2;
         cropPositionY = 10;
@@ -53,6 +54,7 @@ public class Spider : Enemy
             // Checks if the enemy is still alive
             if (active && !_healthSystem.isStunned)
             {
+                ismyTurn = true; 
                 if (CheckForObjCollision(tilemap_PosX + nextMove.X, tilemap_PosY + nextMove.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY))
                 {
                     Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);

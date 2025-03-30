@@ -48,14 +48,22 @@ public class HealthSystem
     }
 
     public bool isStunned { get; set; }
-    
+
+    public bool invincibility;
+
     public string status { get; set; }
     public void TakeDamage(int damage) 
 	{
-        if (!isStunned)
+        // this makes the hit actor stunned. if it already stunned, stop the stun
+        if (!isStunned && !invincibility)
             makeStunned();
         else
             makeUnstunned();
+
+        // if the actor has the invincibility active, receive 0 damage
+        if (invincibility)
+            damage = 0; 
+
 
         // This make the calculation when the actor receives damage. Both health and shield can't be negative, the shield should receive the damage first
         if(damage > shield) 

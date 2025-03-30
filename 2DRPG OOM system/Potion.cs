@@ -23,6 +23,7 @@ public class Potion : Item
     {
         if (!isUsed)
         {
+            // the player recovers 5 hp
             if (Game1.characters[0] is Player)
                 Game1.characters[0]._healthSystem.RecoverHealth(5);
 

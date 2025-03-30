@@ -30,21 +30,23 @@ public class Actor
     public bool active;
 
     // This is the actor turn
-    public bool turn;
+    public bool turn;  
+    public bool ismyTurn;  // This will tell the UI if it's this actor's current turn
     public float waitingTime = 0;
     public bool waitingPhase;
-    public bool hasMoved = false;
+    public bool hasMoved = false;   // This tell if the actor used its turn and has already moved
 
-    public int cropPositionX;
+    // This determine the coordinates to crop the texture image to get the correct sprite for the actor
+    public int cropPositionX;  
     public int cropPositionY; 
 
 
     // Movement
-    public Vector2 moveDir;
-    public Vector2 facingDir;
-
-    public Color AColor; 
-
+    public Vector2 moveDir;   // This is the direction of the actor next move
+    public Vector2 facingDir;  // where the actor is facing
+     
+    public Color AColor;  // The color of the actor, this may change to show the status
+   
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForObjCollision(int Xo, int Yo, int Xt, int Yt) 
@@ -83,13 +85,16 @@ public class Actor
 
     public void FinishTurn()
     {
+        // The actor finish the turn, and now enable the transition between turns
         waitingPhase = true;
         waitingTime = 0;
-        hasMoved = true;
+        hasMoved = true;        
+        
     }
 
     public void waitingTurnToFinish(float _time, GameTime _gameTime) 
     {
+        // How much time between turns
         waitingTime += (float)_gameTime.ElapsedGameTime.TotalSeconds;
         if (waitingTime > _time)
         {
@@ -98,6 +103,7 @@ public class Actor
             turn = false;
             hasMoved = false;
             waitingTime = 0;
+            ismyTurn = false;
         }
     }
 

@@ -20,17 +20,19 @@ public class Projectile
     public int cropX;
     public int cropY;
 
-    public Color pColor; 
+    public Color pColor;   // the color of the projectile
 
     
     public void ProjectileUpdate(GameTime gameTime) 
     {
+        // the projectile moves until it hit a wall
         if(!hit)
         position += direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (collidingWithWall(Game1.tileMap, '#') || collidingWithWall(Game1.tileMap, '$')) 
             hit = true; 
 
+        // the projectile moves until it hit a wall
         for(int i = 0; i < Game1.characters.Count; i++) 
         {
             if (collidingWithActor(Game1.characters[i]))

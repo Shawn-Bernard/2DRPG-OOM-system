@@ -27,12 +27,17 @@ public class Player : Actor
         cropPositionX = 1;
         cropPositionY = 8; 
         AColor = Color.White;
+        _healthSystem.invincibility = false;
+        inventorySlots = 5;
+        shot = false; 
     }
 
     private KeyboardState oldState;     
     public bool keyPress;
-    public List<Item> inventory = new List<Item>(); 
-       
+    public List<Item> inventory = new List<Item>();  // Inventory of items
+    private int inventorySlots; // How many slots the inventory has
+    public Projectile fireBall = null;
+    public bool shot; 
 
     public override void TurnUpdate(GameTime gameTime)
     {
@@ -41,17 +46,18 @@ public class Player : Actor
 
         if (turn & !hasMoved)
         {
-            if (active) // && !_healthSystem.isStunned)
+            if (active && !shot) 
             {
                 moveDir = new Vector2(0, 0); 
                 _healthSystem.defaultStatus();
+
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
                     if (!oldState.IsKeyDown(Keys.A))
                     {
-                        moveDir = new Vector2(-1, 0);
-                        facingDir = moveDir; 
-                        keyPress = true;
+                        moveDir = new Vector2(-1, 0);  // Vector for moving left
+                        facingDir = moveDir;     // the direction the player will be facing (Left)
+                        keyPress = true;     // A button has been pressed
                     }
                     
                 }
@@ -59,18 +65,18 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D))
                     {
-                        moveDir = new Vector2(1, 0); 
-                        facingDir = moveDir;
-                        keyPress = true;
+                        moveDir = new Vector2(1, 0);  // Vector for moving right
+                        facingDir = moveDir;    // the direction the player will be facing (Right)
+                        keyPress = true;         // A button has been pressed
                     }
                 }
                 else if (keyboardState.IsKeyDown(Keys.W))
                 {
                     if (!oldState.IsKeyDown(Keys.W))
                     {
-                        moveDir = new Vector2(0, -1); 
-                        facingDir = moveDir;
-                        keyPress = true;
+                        moveDir = new Vector2(0, -1);  // Vector for moving up
+                        facingDir = moveDir;   // the direction the player will be facing
+                        keyPress = true;   // A button has been pressed
                     }
                         
                     
@@ -79,9 +85,9 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.S))
                     {
-                        moveDir = new Vector2(0, 1); 
-                        facingDir=moveDir;
-                        keyPress = true;
+                        moveDir = new Vector2(0, 1);    // Vector for moving down
+                        facingDir=moveDir;  // the direction the player will be facing
+                        keyPress = true;  // A button has been pressed
                     }
                  
                 }
@@ -89,6 +95,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D1)) 
                     {
+                        // using the item in the first slot
                         consumeItem(0);
                     }
                 }
@@ -96,6 +103,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D2))
                     {
+                        // using the item in the second slot
                         consumeItem(1);
                     }
                 }
@@ -103,6 +111,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D3))
                     {
+                        // using the item in the third slot
                         consumeItem(2);
                     }
                 }
@@ -110,6 +119,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D4))
                     {
+                        // using the item in the fourth slot
                         consumeItem(3);
                     }
                 }
@@ -117,6 +127,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D5))
                     {
+                        // using the item in the fifth slot
                         consumeItem(4);
                     }
                 }
@@ -128,8 +139,8 @@ public class Player : Actor
             {
                 if(checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(Game1.tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
                 {
-                    moveDir = new Vector2(0, 0);
-                    
+                    // if the player collides with a wall or a not walkable tile, the player won't move. 
+                    moveDir = new Vector2(0, 0);                   
                     
                 }
                 else 
@@ -139,6 +150,7 @@ public class Player : Actor
                         // check if the player moves towards an enemy, so it inflict damage instead of moving
                         if (CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY))
                         {
+                            // Ghosts don't take damage in this way
                             if (!(Game1.characters[i] is Ghost))
                             Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
 
@@ -149,24 +161,40 @@ public class Player : Actor
                     // Check if the player collides with a pickup item
                     for(int i = 0; i < Game1.itemsOnMap.Count; i++) 
                     {
-                        if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y)) 
+                        // Check if the player moves towards a pickup item, if the player's inventory is full, the player won't be able to 
+                        // pick up the item.
+                        if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y) 
+                            && inventory.Count < inventorySlots) 
                         {
                             pickItem(Game1.itemsOnMap[i]); 
                         }
                     }
 
-                    Movement((int)moveDir.X, (int)moveDir.Y);                    
-                    FinishTurn();
+                    if (!shot)
+                    {
+                        Movement((int)moveDir.X, (int)moveDir.Y);
+                        FinishTurn();
+                    } 
                 }
-                keyPress = false;
-                
+                keyPress = false;               
+
             }
 
+            if (shot)
+            {
+                if (fireBall.hit)
+                {
+                    shot = false;
+                    fireBall = null;
+                    FinishTurn();
+                }
+            }
         }        
 
 
         if (waitingPhase) 
         {
+            // The turn ends, so this enable the change of turn transition 
             waitingTurnToFinish(2f, gameTime);
         }
 
@@ -203,6 +231,7 @@ public class Player : Actor
 
     public void pickItem(Item _item) 
     {
+        // The player pick the item, remove the item from map and place it in its inventory
         inventory.Add(_item); 
         Game1.itemsOnMap.Remove(_item);
         _item.isPickUp = true; 
@@ -219,13 +248,17 @@ public class Player : Actor
 
     private void consumeItem(int iIndex) 
     {
+        // the player use the item
+
         if (inventory.Count > iIndex && inventory[iIndex] != null)
         {
             inventory[iIndex].itemEffect();
             if (inventory[iIndex].isUsed)
                 inventory.Remove(inventory[iIndex]);
 
+            if(!shot)
             FinishTurn();
+
             keyPress = false;
         }
     }

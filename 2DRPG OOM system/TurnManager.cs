@@ -13,6 +13,7 @@ public class TurnManager
 
     public void UpdateTurnManager(GameTime gameTime) 
     {
+        
         if (characterTurn < Game1.characters.Count) 
         {
             Actor turnCharacter = Game1.characters[characterTurn];    
@@ -25,13 +26,17 @@ public class TurnManager
             {
                 characterTurn++; 
             }
-            //Game1.characters[characterTurn].TurnUpdate(gameTime); 
+            
         }
         else 
-        {
+        {            
             characterTurn = 0;
             for (int i = 0; i < Game1.characters.Count; i++)
-                Game1.characters[i].turn = true; 
+            {
+                Game1.characters[i].turn = true;
+                if (Game1.characters[i]._healthSystem.invincibility)
+                    Game1.characters[i]._healthSystem.invincibility = false;
+            }
         }
     }
 
