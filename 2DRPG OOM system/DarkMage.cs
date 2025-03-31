@@ -34,10 +34,15 @@ public class DarkMage : Enemy
     private int mvY;
     private bool shot;
     public Projectile miasmaFire = null; 
+    // for the miasma ball, the dark mage is going to throw it and it will inflict 4 hp as damage to the player upon hit
 
     public override void TurnUpdate(GameTime gameTime)
     {
-
+        // visualization if the Dark Mage has been damaged
+        if (isDamage)
+        {
+            damageTiming(0.25f, gameTime);
+        }
 
         if (turn && !hasMoved)
         {
@@ -61,7 +66,8 @@ public class DarkMage : Enemy
                         // to the dark mage to shot, check if he hasn't shot already in the current turn and if there is no miasma ball already 
                         if (!shot && miasmaFire == null)
                         {
-                            miasmaFire = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY + 1), new Vector2(0, 1), Color.Purple);
+                            miasmaFire = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY + 1), new Vector2(0, 1), 4, Color.Purple);
+                            miasmaFire.isFromPlayer = false;
                             mvX = 0;
                             mvY = 0;
                             shot = true; 
@@ -73,7 +79,8 @@ public class DarkMage : Enemy
                         // to the dark mage to shot, check if he hasn't shot already in the current turn and if there is no miasma ball already 
                         if (!shot && miasmaFire == null )
                         {
-                            miasmaFire = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY - 1), new Vector2(0, -1), Color.Purple);
+                            miasmaFire = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY - 1), new Vector2(0, -1), 4, Color.Purple);
+                            miasmaFire.isFromPlayer = false;
                             mvX = 0;
                             mvY = 0;
                             shot = true;
@@ -96,7 +103,8 @@ public class DarkMage : Enemy
                         // to the dark mage to shot, check if he hasn't shot already in the current turn and if there is no miasma ball already 
                         if (!shot && miasmaFire == null)                                          
                         {                            
-                            miasmaFire = new FireBall(new Vector2(tilemap_PosX + 1, tilemap_PosY), new Vector2(1, 0), Color.Purple);
+                            miasmaFire = new FireBall(new Vector2(tilemap_PosX + 1, tilemap_PosY), new Vector2(1, 0), 4, Color.Purple);
+                            miasmaFire.isFromPlayer = false;
                             mvX = 0;
                             mvY = 0;
                             shot = true;
@@ -107,7 +115,8 @@ public class DarkMage : Enemy
                         // to the dark mage to shot, check if he hasn't shot already in the current turn and if there is no miasma ball already 
                         if (!shot && miasmaFire == null)
                         {
-                            miasmaFire = new FireBall(new Vector2(tilemap_PosX - 1, tilemap_PosY), new Vector2(-1, 0), Color.Purple);
+                            miasmaFire = new FireBall(new Vector2(tilemap_PosX - 1, tilemap_PosY), new Vector2(-1, 0), 4, Color.Purple);
+                            miasmaFire.isFromPlayer = false;
                             mvX = 0;
                             mvX = 0;
                             shot = true;

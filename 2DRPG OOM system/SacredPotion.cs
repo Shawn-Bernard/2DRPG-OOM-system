@@ -17,6 +17,7 @@ public class SacredPotion : Item
         isPickUp = false;
         isUsed = false;
         itemPosition = itemPos;
+        iColor = Color.White;
     }
 
     public override void itemEffect()

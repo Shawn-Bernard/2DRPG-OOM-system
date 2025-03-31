@@ -10,13 +10,14 @@ public class Potion : Item
 {
     public Potion(Vector2 itemPos) 
     {
-        cropPosX = 8;
+        cropPosX = 6;
         cropPosY = 9;
         name = "Potion";
         description = "The potion heals the player 5 hp";
         isPickUp = false;
         isUsed = false;
         itemPosition = itemPos; 
+        iColor = Color.White;
     }
 
     public override void itemEffect()

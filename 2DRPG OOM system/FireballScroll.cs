@@ -18,6 +18,7 @@ public class FireballScroll : Item
         isPickUp = false;
         isUsed = false;
         itemPosition = itemPos;
+        iColor = Color.White;
     }
 
     public override void itemEffect() 
@@ -31,8 +32,9 @@ public class FireballScroll : Item
                 {
                     ((Player)Game1.characters[0]).fireBall = new FireBall(new Vector2(Game1.characters[0].tilemap_PosX + Game1.characters[0].facingDir.X,
                                                                      Game1.characters[0].tilemap_PosY + Game1.characters[0].facingDir.Y),
-                                                                     Game1.characters[0].facingDir, Color.Red);
+                                                                     Game1.characters[0].facingDir, 5, Color.Red);
 
+                    ((Player)Game1.characters[0]).fireBall.isFromPlayer = true; 
                     ((Player)Game1.characters[0]).shot = true; 
                 }
             }

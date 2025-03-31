@@ -12,10 +12,7 @@ namespace _2DRPG_OOM_system
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;        
-        public static Texture2D mapTexture; 
-        // Creating the Actors: The player and the enemy
-        //public static Player myPlayer = new Player(10, 1, 3, 3, 3, 3);
-        //public Enemy theEnemy = new Enemy(10, 1, 0, 22, 5);
+        public static Texture2D mapTexture;         
         public static List<Actor> characters = new List<Actor>(); 
 
         public bool myTurn = true;
@@ -60,7 +57,7 @@ namespace _2DRPG_OOM_system
             oldState = Keyboard.GetState();
 
             // Set up the player and enemies in a set way
-            characters.Add(new Player(10, 1, 3, 3, 3, 3));
+            characters.Add(new Player(15, 1, 3, 3, 3, 3));
             characters.Add(new DarkMage(10, 1, 0, 20, 6));
             characters.Add(new DarkMage(10, 5, 0, 15, 8));
             characters.Add(new Ghost(10, 1, 0, 22, 5));
@@ -170,29 +167,38 @@ namespace _2DRPG_OOM_system
                 }
             }
 
+            // Draw all the items that are in the tilemap
+            for (int i = 0; i < itemsOnMap.Count; i++)
+            {
+                itemsOnMap[i].DrawItem(_spriteBatch);
+            }
+
+
             // Draw the player
             if (characters[0] is Player)
             {
                 if (characters[0]._healthSystem.life > 0)
                 {
-                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[0].tilemap_PosX * tileSize * 2, (characters[0].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[0].cropPositionX * tileSize, characters[0].cropPositionY * tileSize, tileSize, tileSize), Color.White);
+                    _spriteBatch.Draw(mapTexture, new Rectangle(characters[0].tilemap_PosX * tileSize * 2, (characters[0].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[0].cropPositionX * tileSize, characters[0].cropPositionY * tileSize, tileSize, tileSize), characters[0].AColor);
 
                     if (((Player)characters[0]).levelComplition)
                         _spriteBatch.DrawString(mySpriteFont, "Level Completed", new Vector2(300, 0), Color.White);
                 }
-                else
+                
+            }
+            else
+            {
+                _spriteBatch.DrawString(mySpriteFont, "You Lost", new Vector2(300, 0), Color.White);
+                // All enemies disappear. They went to a party to celebrate the player's defeat.
+                for (int i = 0; i < characters.Count; i++)
                 {
-                    _spriteBatch.DrawString(mySpriteFont, "You Lose!!", new Vector2(300, 0), Color.White);  // Write the message if you lose
-                    for (int i = 0; i < characters.Count; i++)
-                    {
-                        characters[i].active = false;
-                    }
+                    characters[i].active = false;
                 }
             }
 
             // Draw the enemy           
 
-            for(int i = 1; i < characters.Count; i++) 
+            for (int i = 1; i < characters.Count; i++) 
             {
                 if (characters[i]._healthSystem.life > 0 && characters[i] is Enemy)
                     _spriteBatch.Draw(mapTexture, new Rectangle(characters[i].tilemap_PosX * tileSize * 2, (characters[i].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[i].cropPositionX * tileSize, characters[i].cropPositionY * tileSize, tileSize, tileSize), characters[i].AColor);
@@ -201,14 +207,7 @@ namespace _2DRPG_OOM_system
             _spriteBatch.DrawString(mySpriteFont, whosTurn, new Vector2(300f, 60f), Color.White);
                                    
 
-            characters[0].DrawStats(_spriteBatch, 1, 0);
-
-
-            // Draw all the items that are in the tilemap
-            for(int i = 0; i < itemsOnMap.Count; i++) 
-            {
-                itemsOnMap[i].DrawItem(_spriteBatch); 
-            } 
+            characters[0].DrawStats(_spriteBatch, 1, 0);                       
             
             
             // Draw the projectiles if exits. Only player or dark mages can creates projectiles, so it check only those two actors

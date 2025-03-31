@@ -16,11 +16,13 @@ public class Projectile
     public Vector2 direction;
 
     public bool hit;
+    protected int power; 
 
     public int cropX;
     public int cropY;
 
     public Color pColor;   // the color of the projectile
+    public bool isFromPlayer; 
 
     
     public void ProjectileUpdate(GameTime gameTime) 
@@ -37,8 +39,15 @@ public class Projectile
         {
             if (collidingWithActor(Game1.characters[i]))
             {
-                hit = true;
-                Game1.characters[i]._healthSystem.TakeDamage(5); 
+                // if the projectile comes from the player, only damage enemies. 
+                // if the projectile comes from an enemy, only damage the player
+                if ((isFromPlayer && !(Game1.characters[i] is Player)) || (!isFromPlayer && Game1.characters[i] is Player))
+                {
+                    hit = true;
+                    Game1.characters[i]._healthSystem.TakeDamage(power);
+                    Game1.characters[i].damageVisualization(); 
+                }
+                
             }
         }
 

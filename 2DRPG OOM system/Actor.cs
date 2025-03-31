@@ -46,7 +46,9 @@ public class Actor
     public Vector2 facingDir;  // where the actor is facing
      
     public Color AColor;  // The color of the actor, this may change to show the status
-   
+
+    public float CountingTime = 0;
+    public bool isDamage;
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForObjCollision(int Xo, int Yo, int Xt, int Yt) 
@@ -104,6 +106,25 @@ public class Actor
             hasMoved = false;
             waitingTime = 0;
             ismyTurn = false;
+        }
+    }
+    
+    public void damageVisualization() 
+    {
+        // The actor turn red to visualize that it get hit
+        AColor = Color.Red;
+        isDamage = true; 
+
+    }
+
+    public void damageTiming(float _time, GameTime _gameTime) 
+    {
+        // Time for make the actor return to the original colors in a certain period of time
+        CountingTime += (float)_gameTime.ElapsedGameTime.TotalSeconds;
+        if(CountingTime > _time) 
+        {
+            AColor = Color.White;
+            isDamage = false;
         }
     }
 

@@ -17,6 +17,7 @@ public class LightningScroll : Item
         isPickUp = false;
         isUsed = false;
         itemPosition = itemPos;
+        iColor = Color.Yellow;
     }
 
     public override void itemEffect() 
@@ -27,7 +28,7 @@ public class LightningScroll : Item
             {
                 if (Game1.characters[i] is Enemy)
                 {
-                    Game1.characters[i]._healthSystem.TakeDamage(2);
+                    Game1.characters[i]._healthSystem.TakeDamage(3);
                 }
             }
             isUsed = true;

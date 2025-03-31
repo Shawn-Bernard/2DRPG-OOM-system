@@ -29,14 +29,13 @@ public class Player : Actor
         cropPositionY = 8; 
         AColor = Color.White;
         _healthSystem.invincibility = false;
-        inventorySlots = 5;
+        playerInventory.SetInventorySlots(5); 
         shot = false; 
     }
 
     private KeyboardState oldState;     
     public bool keyPress;
-    public List<Item> inventory = new List<Item>();  // Inventory of items
-    private int inventorySlots; // How many slots the inventory has
+    public Inventory playerInventory = new Inventory();     
     public Projectile fireBall = null;
     public bool shot;
     public bool levelComplition;
@@ -46,6 +45,11 @@ public class Player : Actor
     {
         KeyboardState keyboardState = Keyboard.GetState();
 
+        // visualization if the player has been damaged
+        if (isDamage) 
+        {
+            damageTiming(0.25f, gameTime); 
+        }
 
         if (turn & !hasMoved)
         {
@@ -155,7 +159,10 @@ public class Player : Actor
                         {
                             // Ghosts don't take damage in this way
                             if (!(Game1.characters[i] is Ghost))
-                            Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
+                            {
+                                Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
+                                Game1.characters[i].damageVisualization(); 
+                            }
 
                             moveDir = new Vector2(0, 0);
                         }
@@ -167,7 +174,7 @@ public class Player : Actor
                         // Check if the player moves towards a pickup item, if the player's inventory is full, the player won't be able to 
                         // pick up the item.
                         if(CheckForObjCollision(tilemap_PosX + (int)moveDir.X, tilemap_PosY + (int)moveDir.Y, (int)Game1.itemsOnMap[i].itemPosition.X, (int)Game1.itemsOnMap[i].itemPosition.Y) 
-                            && inventory.Count < inventorySlots) 
+                            && playerInventory.inventory.Count < playerInventory.inventorySlots) 
                         {
                             pickItem(Game1.itemsOnMap[i]); 
                         }
@@ -192,6 +199,8 @@ public class Player : Actor
                     FinishTurn();
                 }
             }
+
+            
         }        
 
 
@@ -245,17 +254,19 @@ public class Player : Actor
             _spriteBatch.DrawString(Game1.mySpriteFont, "|", new Vector2(i * 25 + 2, posY + 100), Color.White);
         }
 
+        _spriteBatch.DrawString(Game1.mySpriteFont, "|", new Vector2(127, posY + 100), Color.White);
+
         //The items from the inventory are drawn 
-        for (int i = 0; i < inventory.Count; i++) 
+        for (int i = 0; i < playerInventory.inventory.Count; i++) 
         {
-            _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(inventory[i].cropPosX * Game1.tileSize, inventory[i].cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize) , Color.White);
+            _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(playerInventory.inventory[i].cropPosX * Game1.tileSize, playerInventory.inventory[i].cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize) , Color.White);
         }
     }
 
     public void pickItem(Item _item) 
     {
         // The player pick the item, remove the item from map and place it in its inventory
-        inventory.Add(_item); 
+        playerInventory.inventory.Add(_item); 
         Game1.itemsOnMap.Remove(_item);
         _item.isPickUp = true; 
     }
@@ -278,11 +289,11 @@ public class Player : Actor
     {
         // the player use the item
 
-        if (inventory.Count > iIndex && inventory[iIndex] != null)
+        if (playerInventory.inventory.Count > iIndex && playerInventory.inventory[iIndex] != null)
         {
-            inventory[iIndex].itemEffect();
-            if (inventory[iIndex].isUsed)
-                inventory.Remove(inventory[iIndex]);
+            playerInventory.inventory[iIndex].itemEffect();
+            if (playerInventory.inventory[iIndex].isUsed)
+                playerInventory.inventory.Remove(playerInventory.inventory[iIndex]);
 
             if(!shot)
             FinishTurn();

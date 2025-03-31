@@ -34,8 +34,13 @@ public class Ghost : Enemy
 
     public override void TurnUpdate(GameTime gameTime)
     {
+        // visualization if the ghost has been damaged
+        if (isDamage)
+        {
+            damageTiming(0.25f, gameTime);
+        }
 
-        
+
         if (turn && !hasMoved)
         {
             // Checks if the enemy is still alive or is not stunned
@@ -70,6 +75,7 @@ public class Ghost : Enemy
                     if (CheckForObjCollision(tilemap_PosX + mvX, tilemap_PosY + mvY, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY) && Game1.characters[i] is Player)
                     {
                         Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
+                        Game1.characters[0].damageVisualization(); 
                         mvX = 0;
                         mvY = 0;
                     }

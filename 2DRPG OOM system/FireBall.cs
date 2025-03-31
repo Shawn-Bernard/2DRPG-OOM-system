@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 public class FireBall : Projectile
 {
-    public FireBall(Vector2 Position, Vector2 Direction, Color _color) 
+    public FireBall(Vector2 Position, Vector2 Direction, int Power, Color _color) 
     {
         position = Position;
         direction = Direction;
@@ -16,6 +16,7 @@ public class FireBall : Projectile
         cropX = 6;
         cropY = 8;
         pColor = _color; 
+        power = Power;
     }
 
 

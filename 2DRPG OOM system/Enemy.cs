@@ -23,15 +23,19 @@ public class Enemy : Actor
         {
             case 0:                
                 _typeOfMovement = "Right";
+                moveDir = new Vector2(1, 0);
                 break;
             case 1:
                 _typeOfMovement = "Left";
+                moveDir = new Vector2(-1, 0);
                 break;
             case 2:
                 _typeOfMovement = "Down";
+                moveDir = new Vector2(0, 1);
                 break;
             case 3:
-                _typeOfMovement = "Up"; 
+                _typeOfMovement = "Up";
+                moveDir = new Vector2(0, -1); 
                 break;
             default:
                 //Nothing Happens

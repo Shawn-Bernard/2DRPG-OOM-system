@@ -19,7 +19,8 @@ public class Item
     public int cropPosX;
     public int cropPosY;
 
-    public Vector2 itemPosition; 
+    public Vector2 itemPosition;
+    protected Color iColor; 
     public virtual void itemEffect() 
     {
 
@@ -28,7 +29,7 @@ public class Item
     public void DrawItem(SpriteBatch _spriteBatch) 
     {
         // draw the item on map
-        _spriteBatch.Draw(Game1.mapTexture, new Rectangle((int)itemPosition.X * Game1.tileSize * 2, ((int)itemPosition.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(cropPosX * Game1.tileSize, cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize), Color.White); 
+        _spriteBatch.Draw(Game1.mapTexture, new Rectangle((int)itemPosition.X * Game1.tileSize * 2, ((int)itemPosition.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(cropPosX * Game1.tileSize, cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize), iColor); 
     }
 
 }

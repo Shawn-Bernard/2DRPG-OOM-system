@@ -33,16 +33,9 @@ public class Spider : Enemy
 
     public override void TurnUpdate(GameTime gameTime)
     {
-        _pathfinder.InitializePathfinding(Game1.tileMap.multidimensionalMap, new Point(tilemap_PosX, tilemap_PosY), new Point(Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY));
+        eMovement = TypeOfMovement();
 
-        _pathfinder.BestPath.Clear(); 
-
-        _pathfinder.ExploringNode();        
-
-
-        if (_pathfinder.BestPath.Count > 1 )//&& _pathfinder.BestPath[1] != null)
-            nextMove = _pathfinder.getTheBestPath(_pathfinder.exploredNodes);
-
+        
         if (_healthSystem.isStunned)
             AColor = Color.Yellow;
         else
@@ -58,12 +51,12 @@ public class Spider : Enemy
                 if (CheckForObjCollision(tilemap_PosX + nextMove.X, tilemap_PosY + nextMove.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY))
                 {
                     Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
+                    Game1.characters[0].damageVisualization(); 
                     
                 }
                 else 
                 {
-                    tilemap_PosX = nextMove.X;
-                    tilemap_PosY = nextMove.Y;
+                    Movement((int)moveDir.X, (int)moveDir.Y); 
                 }
 
                 FinishTurn();
