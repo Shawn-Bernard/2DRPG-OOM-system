@@ -64,11 +64,11 @@ using System.Threading.Tasks;
         {
             charElement = '*';
         }
-        else if (typeOfString < 90)
+        else if (typeOfString < 94)
         {
             charElement = '%';
         }
-        else if (typeOfString < 95)
+        else if (typeOfString < 97)
         {
             charElement = '$';
         }       

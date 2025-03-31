@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 
 public class Player : Actor
@@ -37,7 +38,9 @@ public class Player : Actor
     public List<Item> inventory = new List<Item>();  // Inventory of items
     private int inventorySlots; // How many slots the inventory has
     public Projectile fireBall = null;
-    public bool shot; 
+    public bool shot;
+    public bool levelComplition;
+   
 
     public override void TurnUpdate(GameTime gameTime)
     {
@@ -198,11 +201,31 @@ public class Player : Actor
             waitingTurnToFinish(2f, gameTime);
         }
 
-        // Here it checks if the player collides with the door while there is no enemies to generate a new map
-        if (Game1.characters.Count < 2 && Game1.characters[0] is Player && checkingForCollision(Game1.tileMap, '@', this, 0, 0))
-            changeMap(); 
+        // Here it checks if the player collides with the door and the level is complited. If that's the case, it generates a new map
+        if (levelComplition && Game1.characters[0] is Player && checkingForCollision(Game1.tileMap, '@', this, 0, 0)) 
+        {
+            levelComplition = false;
+            changeMap();
+        }
+            
 
         oldState = keyboardState;
+
+        if (!levelComplition)
+        {
+            levelComplition = true;
+            for (int i = 0; i < Game1.characters.Count; i++)
+            {
+                // This check if the list of characters consist only in Player and ghost. If that's the case, the level is completed
+                if (!(Game1.characters[i] is Player || Game1.characters[i] is Ghost))
+                {
+                    levelComplition = false; 
+                }
+            }
+            if (levelComplition)
+                Debug.Print("Level Completed!"); 
+        }
+
     }
 
     public override void DrawStats(SpriteBatch _spriteBatch, int num, int posY) 
@@ -240,10 +263,15 @@ public class Player : Actor
 
     public void changeMap() 
     {
+        // put the player in the original position
         tilemap_PosX = 3;
         tilemap_PosY = 3;
+        // generate another map based on random
         Game1.mString = Game1.tileMap.GenerateMapString(25, 10);        
         Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
+
+        // Place new enemies at random positions
+        Game1.placementManager.AddEnemies(Game1.tileMap); 
     }
 
     private void consumeItem(int iIndex) 

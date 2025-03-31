@@ -38,7 +38,7 @@ namespace _2DRPG_OOM_system
 
         public static List<Projectile> projectiles = new List<Projectile>();
 
-        public PlacementManager placementManager = new PlacementManager();
+        public static PlacementManager placementManager = new PlacementManager();
         public List<Vector2> tempPoints = new List<Vector2>(); 
         
         public Game1()
@@ -59,25 +59,22 @@ namespace _2DRPG_OOM_system
             tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             oldState = Keyboard.GetState();
 
-            characters.Add(new Player(10, 1, 3, 3, 3, 3)); 
-            //characters.Add( new Spider(10, 1, 0, 22, 5));
+            // Set up the player and enemies in a set way
+            characters.Add(new Player(10, 1, 3, 3, 3, 3));
             characters.Add(new DarkMage(10, 1, 0, 20, 6));
             characters.Add(new DarkMage(10, 5, 0, 15, 8));
             characters.Add(new Ghost(10, 1, 0, 22, 5));
+           
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 10; i++)
             {
+                // Generating random points, to place the item later
                 tempPoints.Add(placementManager.GetWalkablePoint(tileMap));
             }
 
-            itemsOnMap.Add(new Potion(tempPoints[0]));
-            itemsOnMap.Add(new Potion(tempPoints[1]));
-            itemsOnMap.Add(new FireballScroll(tempPoints[2]));
-            itemsOnMap.Add(new LightningScroll(tempPoints[3]));
-            itemsOnMap.Add(new SacredPotion(tempPoints[4]));
-            itemsOnMap.Add(new LightningScroll(tempPoints[5]));
-            itemsOnMap.Add(new FireballScroll(tempPoints[6]));
-            itemsOnMap.Add(new Potion(tempPoints[7]));         
+            // Place each item in each point generated
+            placementManager.initializeItems(itemsOnMap, tempPoints); 
+            
 
         }
 
@@ -139,6 +136,7 @@ namespace _2DRPG_OOM_system
                         whosTurn = "Player Turn";
                     else
                         whosTurn = "Enemies Turn";
+                    
                 }
 
                 for (int i = 0; i < itemsOnMap.Count; i++)
@@ -176,11 +174,16 @@ namespace _2DRPG_OOM_system
             if (characters[0] is Player)
             {
                 if (characters[0]._healthSystem.life > 0)
+                {
                     _spriteBatch.Draw(mapTexture, new Rectangle(characters[0].tilemap_PosX * tileSize * 2, (characters[0].tilemap_PosY + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(characters[0].cropPositionX * tileSize, characters[0].cropPositionY * tileSize, tileSize, tileSize), Color.White);
+
+                    if (((Player)characters[0]).levelComplition)
+                        _spriteBatch.DrawString(mySpriteFont, "Level Completed", new Vector2(300, 0), Color.White);
+                }
                 else
                 {
                     _spriteBatch.DrawString(mySpriteFont, "You Lose!!", new Vector2(300, 0), Color.White);  // Write the message if you lose
-                    for (int i = 0; i < characters.Count; i++) 
+                    for (int i = 0; i < characters.Count; i++)
                     {
                         characters[i].active = false;
                     }
@@ -207,11 +210,8 @@ namespace _2DRPG_OOM_system
                 itemsOnMap[i].DrawItem(_spriteBatch); 
             } 
             
-
-            // Draw the projectiles
-            for(int i = 0; i < projectiles.Count; i++)
-            _spriteBatch.Draw(mapTexture, new Rectangle(projectiles[i].X * tileSize * 2, (projectiles[i].Y + 5) * tileSize * 2, tileSize * 2, tileSize * 2), new Rectangle(projectiles[i].cropX * tileSize, projectiles[i].cropY * tileSize, tileSize, tileSize), projectiles[i].pColor);
-
+            
+            // Draw the projectiles if exits. Only player or dark mages can creates projectiles, so it check only those two actors
             for (int i = 0; i < characters.Count; i++) 
             {
                 if (characters[i] is DarkMage) 
