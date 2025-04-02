@@ -9,16 +9,16 @@ using Microsoft.Xna.Framework;
 
 public class DarkMage : Enemy
 {
-    public DarkMage(int hp, int atk, int shld, int iPosX, int iPosY) 
+    public DarkMage(int iPosX, int iPosY) 
     {
-        _healthSystem.health = hp;
-        _healthSystem.power = atk;
-        _healthSystem.shield = shld;
+        _healthSystem.health = 10;
+        _healthSystem.power = 0;
+        _healthSystem.shield = 0;
         _healthSystem.life = 1;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
-        _healthSystem.setMaxHP(hp);
-        _healthSystem.setMaxShield(shld);
+        _healthSystem.setMaxHP(10);
+        _healthSystem.setMaxShield(0);
         _healthSystem.isStunned = false;
         active = true;
         turn = true;

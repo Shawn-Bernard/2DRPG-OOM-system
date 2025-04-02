@@ -9,12 +9,12 @@ using System.Diagnostics;
 public class Player : Actor
 {    
 
-    public Player(int hp, int atk, int shld, int iLife, int iPosX, int iPosY)
+    public Player(int iPosX, int iPosY)
     {
-        _healthSystem.health = hp;
-        _healthSystem.power = atk;
-        _healthSystem.shield = shld;
-        _healthSystem.life = iLife;
+        _healthSystem.health = 15;
+        _healthSystem.power = 1;
+        _healthSystem.shield = 3;
+        _healthSystem.life = 3;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
         _healthSystem.isStunned = false;
@@ -22,8 +22,8 @@ public class Player : Actor
         turn = true;
         waitingPhase = false;
         _healthSystem.status = "Normal";
-        _healthSystem.setMaxHP(hp);
-        _healthSystem.setMaxShield(shld);
+        _healthSystem.setMaxHP(15);
+        _healthSystem.setMaxShield(3);
         keyPress = false;
         cropPositionX = 1;
         cropPositionY = 8; 

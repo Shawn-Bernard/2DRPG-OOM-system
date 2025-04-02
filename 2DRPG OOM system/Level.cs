@@ -1,0 +1,180 @@
+﻿using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+public class Level : Scene
+{
+    public Level (int iLevel) 
+    {
+        numberOfLevel = iLevel; 
+    }
+
+
+    public int numberOfLevel;
+
+
+    public override void SceneUpdate(GameTime gameTime)
+    {
+
+        // This is the logic for the turns 
+        Game1.turnManager.UpdateTurnManager(gameTime);
+
+        for (int i = 0; i < Game1.projectiles.Count; i++)
+            Game1.projectiles[i].ProjectileUpdate(gameTime);
+
+        for (int i = 0; i < Game1.projectiles.Count; i++)
+        {
+            if (Game1.projectiles[i].hit)
+            {
+                Game1.projectiles.Remove(Game1.projectiles[i]);
+            }
+        }
+
+        for (int i = 0; i < Game1.characters.Count; i++)
+        {
+            if (Game1.characters[i] is DarkMage)
+            {
+                if (((DarkMage)Game1.characters[i]).miasmaFire != null)
+                {
+                    ((DarkMage)Game1.characters[i]).miasmaFire.ProjectileUpdate(gameTime);
+                }
+            }
+
+            if (Game1.characters[i] is Player)
+            {
+                if (((Player)Game1.characters[i]).fireBall != null)
+                {
+                    ((Player)Game1.characters[i]).fireBall.ProjectileUpdate(gameTime);
+                }
+            }
+
+            if (Game1.characters[i]._healthSystem.life <= 0)
+                Game1.characters.Remove(Game1.characters[i]);           
+
+        }
+
+        if (Game1.characters[0] is Player)
+        {
+            if (Game1.characters[0]._healthSystem.life > 0)
+            {
+                if (((Player)Game1.characters[0]).turn && !((Player)Game1.characters[0]).hasMoved)
+                    Game1.whosTurn = "Player Turn";
+                else
+                    Game1.whosTurn = "Enemies Turn";
+
+            }
+
+            for (int i = 0; i < Game1.itemsOnMap.Count; i++)
+            {
+                if (Game1.itemsOnMap[i].isUsed)
+                    Game1.itemsOnMap.Remove(Game1.itemsOnMap[i]);
+            }
+        }
+    }
+
+    public override void DrawScene(GameTime gameTime, SpriteBatch _spriteBatch)
+    {
+        for (int i = 0; i < 25; i++)
+        {
+            for (int j = 0 + 5; j < 10 + 5; j++)
+            {
+                Game1.tileMap.getTheIndexes(Game1.tileMap.MapToChar(Game1.tileMap.multidimensionalMap, i, j - 5));
+                _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * Game1.tileSize * 2, j * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(Game1.tileMap.horizontalIndex * Game1.tileSize, Game1.tileMap.verticalIndex * Game1.tileSize, Game1.tileSize, Game1.tileSize), Color.White);
+            }
+        }
+
+
+        // Draw all the items that are in the tilemap
+        for (int i = 0; i < Game1.itemsOnMap.Count; i++)
+        {
+            Game1.itemsOnMap[i].DrawItem(_spriteBatch);
+        }
+
+        // Draw the player
+        if (Game1.characters[0] is Player)
+        {
+            if (Game1.characters[0]._healthSystem.life > 0)
+            {
+                _spriteBatch.Draw(Game1.mapTexture, new Rectangle(Game1.characters[0].tilemap_PosX * Game1.tileSize * 2, (Game1.characters[0].tilemap_PosY + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(Game1.characters[0].cropPositionX * Game1.tileSize, Game1.characters[0].cropPositionY * Game1.tileSize, Game1.tileSize, Game1.tileSize), Game1.characters[0].AColor);
+
+                if (((Player)Game1.characters[0]).levelComplition)
+                    _spriteBatch.DrawString(Game1.mySpriteFont, "Level Completed", new Vector2(300, 0), Color.White);
+            }
+
+        }
+        else
+        {
+            _spriteBatch.DrawString(Game1.mySpriteFont, "You Lost", new Vector2(300, 0), Color.White);
+            // All enemies disappear. They went to a party to celebrate the player's defeat.
+            for (int i = 0; i < Game1.characters.Count; i++)
+            {
+                Game1.characters[i].active = false;
+            }
+        }
+
+        // Draw the enemy           
+
+        for (int i = 1; i < Game1.characters.Count; i++)
+        {
+            if (Game1.characters[i]._healthSystem.life > 0 && Game1.characters[i] is Enemy)
+                _spriteBatch.Draw(Game1.mapTexture, new Rectangle(Game1.characters[i].tilemap_PosX * Game1.tileSize * 2, (Game1.characters[i].tilemap_PosY + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(Game1.characters[i].cropPositionX * Game1.tileSize, Game1.characters[i].cropPositionY * Game1.tileSize, Game1.tileSize, Game1.tileSize), Game1.characters[i].AColor);
+        }
+
+        _spriteBatch.DrawString(Game1.mySpriteFont, Game1.whosTurn, new Vector2(300f, 60f), Color.White);
+
+
+        Game1.characters[0].DrawStats(_spriteBatch, 1, 0);
+
+        // Draw the projectiles if exits. Only player or dark mages can creates projectiles, so it check only those two actors
+        for (int i = 0; i < Game1.characters.Count; i++)
+        {
+            if (Game1.characters[i] is DarkMage)
+            {
+                if (((DarkMage)Game1.characters[i]).miasmaFire != null)
+                    _spriteBatch.Draw(Game1.mapTexture, new Rectangle(((DarkMage)Game1.characters[i]).miasmaFire.X * Game1.tileSize * 2, (((DarkMage)Game1.characters[i]).miasmaFire.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(((DarkMage)Game1.characters[i]).miasmaFire.cropX * Game1.tileSize, ((DarkMage)Game1.characters[i]).miasmaFire.cropY * Game1.tileSize, Game1.tileSize, Game1.tileSize), ((DarkMage)Game1.characters[i]).miasmaFire.pColor);
+            }
+
+            if (Game1.characters[i] is Player)
+            {
+                if (((Player)Game1.characters[i]).fireBall != null)
+                {
+                    _spriteBatch.Draw(Game1.mapTexture, new Rectangle(((Player)Game1.characters[i]).fireBall.X * Game1.tileSize * 2, (((Player)Game1.characters[i]).fireBall.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(((Player)Game1.characters[i]).fireBall.cropX * Game1.tileSize, ((Player)Game1.characters[i]).fireBall.cropY * Game1.tileSize, Game1.tileSize, Game1.tileSize), ((Player)Game1.characters[i]).fireBall.pColor);
+                }
+            }
+        }
+
+        // Draw the enemies stats 
+        for (int i = 1; i < Game1.characters.Count; i++)
+        {
+            if (Game1.characters[i] is Enemy)
+                ((Enemy)Game1.characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);
+        }
+
+    }
+
+    public void goToSecondLevel() 
+    {
+        for(int i = 0; i < Game1.characters.Count; i++) 
+        {
+            if (!(Game1.characters[i] is Player)) 
+            {
+                Game1.characters.Remove(Game1.characters[i]); 
+            }
+        }
+
+        // generate another map based on random
+        Game1.mString = Game1.tileMap.GenerateMapString(25, 10);
+        Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
+
+        // Place new enemies at random positions
+        Game1.placementManager.AddEnemies(Game1.tileMap);
+    }
+}
+
+

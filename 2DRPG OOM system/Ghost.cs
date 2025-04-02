@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 public class Ghost : Enemy
 {
-    public Ghost(int hp, int atk, int shld, int iPosX, int iPosY) 
+    public Ghost(int iPosX, int iPosY) 
     {
-        _healthSystem.health = hp;
-        _healthSystem.power = atk;
-        _healthSystem.shield = shld;
+        _healthSystem.health = 7;
+        _healthSystem.power = 3;
+        _healthSystem.shield = 0;
         _healthSystem.life = 1;
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
-        _healthSystem.setMaxHP(hp);
-        _healthSystem.setMaxShield(shld);
+        _healthSystem.setMaxHP(7);
+        _healthSystem.setMaxShield(3);
         _healthSystem.isStunned = false;
         active = true;
         turn = true;

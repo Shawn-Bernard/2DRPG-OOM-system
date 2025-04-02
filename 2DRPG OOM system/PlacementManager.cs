@@ -74,15 +74,15 @@ public class PlacementManager
 
         tempVector = GetWalkablePoint(Game1.tileMap); 
 
-        Game1.characters.Add(new DarkMage(10, 1, 0, (int)tempVector.X, (int)tempVector.Y));
+        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
 
         tempVector = GetWalkablePoint(Game1.tileMap);
 
-        Game1.characters.Add(new DarkMage(10, 1, 0, (int)tempVector.X, (int)tempVector.Y));
+        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
 
         tempVector = GetWalkablePoint(Game1.tileMap);
 
-        Game1.characters.Add(new Ghost(10, 1, 0, (int)tempVector.X, (int)tempVector.Y));
+        Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
     }
 }
 
