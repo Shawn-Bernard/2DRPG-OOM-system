@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,6 +75,15 @@ public class Level : Scene
             {
                 if (Game1.itemsOnMap[i].isUsed)
                     Game1.itemsOnMap.Remove(Game1.itemsOnMap[i]);
+            }
+        }
+
+        if (Game1.characters[0] is Player) 
+        {
+            if (((Player)Game1.characters[0]).goToNextLevel && numberOfLevel + 1 > Game1.maxNumLevel) 
+            {
+                ((Player)Game1.characters[0]).goToNextLevel = false;
+                goToNextLevel(numberOfLevel + 1); 
             }
         }
     }
@@ -168,12 +178,28 @@ public class Level : Scene
             }
         }
 
+        ((Player)Game1.characters[0]).tilemap_PosX = 3;
+        ((Player)Game1.characters[0]).tilemap_PosY = 3;
+
         // generate another map based on random
         Game1.mString = Game1.tileMap.GenerateMapString(25, 10);
         Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
 
         // Place new enemies at random positions
         Game1.placementManager.AddEnemies(Game1.tileMap);
+    }
+
+    public void goToNextLevel(int numLvl) 
+    {
+        switch (numLvl) 
+        {
+            case 2:
+                goToSecondLevel();
+                break;
+            default:
+                Debug.Write("There is no level yet");
+                break; 
+        }
     }
 }
 

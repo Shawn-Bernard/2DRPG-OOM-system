@@ -40,8 +40,8 @@ namespace _2DRPG_OOM_system
 
         public List<Scene> GameScenes = new List<Scene>();
 
-        private int numLevel;
-        private int maxNumLevel; 
+        public int numLevel;
+        public static int maxNumLevel; 
                
         
         public Game1()

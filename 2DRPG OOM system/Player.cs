@@ -39,6 +39,7 @@ public class Player : Actor
     public Projectile fireBall = null;
     public bool shot;
     public bool levelComplition;
+    public bool goToNextLevel; 
    
 
     public override void TurnUpdate(GameTime gameTime)
@@ -213,8 +214,8 @@ public class Player : Actor
         // Here it checks if the player collides with the door and the level is complited. If that's the case, it generates a new map
         if (levelComplition && Game1.characters[0] is Player && checkingForCollision(Game1.tileMap, '@', this, 0, 0)) 
         {
-            levelComplition = false;
-            changeMap();
+            goToNextLevel = true;
+            levelComplition = false; 
         }
             
 
