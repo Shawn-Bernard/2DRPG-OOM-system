@@ -66,7 +66,7 @@ namespace _2DRPG_OOM_system
             // Set up the player and enemies in a set way
             characters.Add(new Player(3, 3));
             characters.Add(new DarkMage(20, 6));
-            characters.Add(new DarkMage(15, 8));
+            characters.Add(new Boss(15, 8));
             characters.Add(new Ghost(22, 5));
            
 

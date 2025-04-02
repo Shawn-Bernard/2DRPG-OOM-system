@@ -55,6 +55,14 @@ public class Level : Scene
                 }
             }
 
+            if (Game1.characters[i] is Boss) 
+            {
+                if (((Boss)Game1.characters[i]).VenomBreath != null) 
+                {
+                    ((Boss)Game1.characters[i]).VenomBreath.ProjectileUpdate(gameTime); 
+                }
+            }
+
             if (Game1.characters[i]._healthSystem.life <= 0)
                 Game1.characters.Remove(Game1.characters[i]);           
 
@@ -155,6 +163,14 @@ public class Level : Scene
                 if (((Player)Game1.characters[i]).fireBall != null)
                 {
                     _spriteBatch.Draw(Game1.mapTexture, new Rectangle(((Player)Game1.characters[i]).fireBall.X * Game1.tileSize * 2, (((Player)Game1.characters[i]).fireBall.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(((Player)Game1.characters[i]).fireBall.cropX * Game1.tileSize, ((Player)Game1.characters[i]).fireBall.cropY * Game1.tileSize, Game1.tileSize, Game1.tileSize), ((Player)Game1.characters[i]).fireBall.pColor);
+                }
+            }
+
+            if (Game1.characters[i] is Boss) 
+            {
+                if (((Boss)Game1.characters[i]).VenomBreath != null) 
+                {
+                    _spriteBatch.Draw(Game1.mapTexture, new Rectangle(((Boss)Game1.characters[i]).VenomBreath.X * Game1.tileSize * 2, (((Boss)Game1.characters[i]).VenomBreath.Y + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(((Boss)Game1.characters[i]).VenomBreath.cropX * Game1.tileSize, ((Boss)Game1.characters[i]).VenomBreath.cropY * Game1.tileSize, Game1.tileSize, Game1.tileSize), ((Boss)Game1.characters[i]).VenomBreath.pColor);
                 }
             }
         }
