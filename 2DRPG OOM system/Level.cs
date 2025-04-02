@@ -80,7 +80,7 @@ public class Level : Scene
 
         if (Game1.characters[0] is Player) 
         {
-            if (((Player)Game1.characters[0]).goToNextLevel && numberOfLevel + 1 > Game1.maxNumLevel) 
+            if (((Player)Game1.characters[0]).goToNextLevel && numberOfLevel + 1 <= Game1.maxNumLevel) 
             {
                 ((Player)Game1.characters[0]).goToNextLevel = false;
                 goToNextLevel(numberOfLevel + 1); 
@@ -180,6 +180,7 @@ public class Level : Scene
 
         ((Player)Game1.characters[0]).tilemap_PosX = 3;
         ((Player)Game1.characters[0]).tilemap_PosY = 3;
+        ((Player)Game1.characters[0]).levelComplition = false; 
 
         // generate another map based on random
         Game1.mString = Game1.tileMap.GenerateMapString(25, 10);

@@ -195,8 +195,6 @@ using System.Threading.Tasks;
         // This is to load a premade file from a text file
         string myLines = System.IO.File.ReadAllText(mapFilePath);
         ConvertToMap(myLines, multidimensionalMap);
-
-
     }
 
 }

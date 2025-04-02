@@ -20,6 +20,9 @@
 /processorParam:TextureFormat=Compressed
 /build:Font.spritefont
 
+#begin LoadedMap1.txt
+/copy:LoadedMap1.txt
+
 #begin tilemap_packed.png
 /importer:TextureImporter
 /processor:TextureProcessor

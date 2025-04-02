@@ -58,8 +58,9 @@ namespace _2DRPG_OOM_system
             base.Initialize();            
             mapTexture = Content.Load<Texture2D>("The_Tilemap");            
             mySpriteFont = Content.Load<SpriteFont>("Font");
-            mString = tileMap.GenerateMapString(25, 10);
-            tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
+            //mString = tileMap.GenerateMapString(25, 10);
+            tileMap.LoadPremadeMap("LoadedMap1.txt");
+            //tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             oldState = Keyboard.GetState();
 
             // Set up the player and enemies in a set way

@@ -11,8 +11,18 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\LoadedMap1.txt" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+    <None Remove="LoadedMap1.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\LoadedMap1.txt">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LoadedMap1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
