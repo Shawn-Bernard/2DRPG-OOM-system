@@ -13,7 +13,8 @@ public class Level : Scene
 {
     public Level (int iLevel) 
     {
-        numberOfLevel = iLevel; 
+        numberOfLevel = iLevel;
+        backgroundColor = Color.CornflowerBlue; 
     }
 
 
@@ -85,6 +86,7 @@ public class Level : Scene
                     Game1.itemsOnMap.Remove(Game1.itemsOnMap[i]);
             }
         }
+        
 
         if (Game1.characters[0] is Player) 
         {
