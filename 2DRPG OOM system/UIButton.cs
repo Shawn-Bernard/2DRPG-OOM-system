@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ public class UIButton
         buttonPosition = bPosition;
         width = bWidth;
         height = bHeight;
+        buttonColor = Color.White;
     }
 
     public Texture2D buttonTexture;
@@ -28,13 +30,25 @@ public class UIButton
     public Vector2 buttonPosition;
     public float width;
     public float height;
+    public Color buttonColor; 
 
     public void DrawUI(GameTime gameTime, SpriteBatch _spritebatch) 
     {
-        _spritebatch.Draw(buttonTexture, new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)width, (int)height), Color.White);
+        _spritebatch.Draw(buttonTexture, new Rectangle((int)buttonPosition.X, (int)buttonPosition.Y, (int)width, (int)height), buttonColor);
         _spritebatch.DrawString(textFont, buttonText, new Vector2(buttonPosition.X + 20, buttonPosition.Y + height/3), Color.Black);
     }
 
+    public bool WithInBounds(MouseState _mouseState) 
+    {
+        Vector2 pointPosition = new Vector2(_mouseState.Position.X, _mouseState.Position.Y);
+
+
+        return pointPosition.X > buttonPosition.X && pointPosition.X < buttonPosition.X + width
+            && pointPosition.Y > buttonPosition.Y && pointPosition.Y < buttonPosition.Y + height;            
+
+    }
+
+    
 
     
 }

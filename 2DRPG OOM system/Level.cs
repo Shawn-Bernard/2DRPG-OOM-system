@@ -14,7 +14,7 @@ public class Level : Scene
     public Level (int iLevel) 
     {
         numberOfLevel = iLevel;
-        backgroundColor = Color.CornflowerBlue; 
+        backgroundColor = Color.DarkBlue; 
     }
 
 
@@ -219,6 +219,11 @@ public class Level : Scene
                 Debug.Write("There is no level yet");
                 break; 
         }
+    }
+
+    public void quitGame() 
+    {
+        System.Environment.Exit(0);
     }
 }
 

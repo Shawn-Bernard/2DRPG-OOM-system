@@ -68,11 +68,11 @@ namespace _2DRPG_OOM_system
             //tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
             oldState = Keyboard.GetState();
 
-            // Set up the player and enemies in a set way
+            // Set up the player and enemies for the first level
             characters.Add(new Player(3, 3));
             characters.Add(new DarkMage(20, 6));
-            characters.Add(new Boss(15, 8));
-            characters.Add(new Ghost(22, 5));
+           
+           
            
 
             for (int i = 0; i < 10; i++)
@@ -109,6 +109,7 @@ namespace _2DRPG_OOM_system
 
             GameScenes[currentScene].SceneUpdate(gameTime);           
             
+            
 
             base.Update(gameTime);
             
@@ -118,6 +119,7 @@ namespace _2DRPG_OOM_system
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(GameScenes[currentScene].backgroundColor);
+            //GraphicsDevice.Clear(Color.DarkBlue); 
 
             // TODO: Add your drawing code here
 

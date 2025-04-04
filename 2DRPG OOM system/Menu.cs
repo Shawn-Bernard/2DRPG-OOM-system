@@ -16,14 +16,37 @@ public class Menu : Scene
 
     public SpriteFont txtFont;
 
+    
+
     public override void SceneUpdate(GameTime gameTime)
     {
         KeyboardState keyboardState = Keyboard.GetState();
+        MouseState currentMouseState = Mouse.GetState();
 
         if (keyboardState.IsKeyDown(Keys.Q)) 
         {
             changeNextScene(); 
         }
+
+        for (int i = 0; i < buttons.Count; i++) 
+        {
+            if (buttons[i].WithInBounds(currentMouseState)) 
+            {
+                buttons[i].buttonColor = Color.Gray;
+                buttons[i].focused = true;
+            }
+            else 
+            {
+                buttons[i].buttonColor = Color.White;
+                buttons[i].focused = false;
+            }
+
+            if(currentMouseState.LeftButton == ButtonState.Pressed && buttons[i].focused) 
+            {
+                StartGame();
+            }           
+        }
+
     }
 
     public override void DrawScene(GameTime gameTime, SpriteBatch _spriteBatch)

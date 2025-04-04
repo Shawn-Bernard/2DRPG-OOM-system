@@ -29,5 +29,10 @@ public class Scene
         Game1.currentScene++;
 
     }
+
+    public void StartGame() 
+    {
+        Game1.currentScene = 1; 
+    }
 }
 
