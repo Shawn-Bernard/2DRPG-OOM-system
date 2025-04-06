@@ -40,7 +40,13 @@ public class TurnManager
         }
     }
 
-
+    public void resetTurns() 
+    {
+        for(int i = 0; i < Game1.characters.Count; i++) 
+        {
+            Game1.characters[i].turn = false;
+        }
+    }
 
 }
 

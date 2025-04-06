@@ -90,10 +90,11 @@ public class Level : Scene
 
         if (Game1.characters[0] is Player) 
         {
-            if (((Player)Game1.characters[0]).goToNextLevel && numberOfLevel + 1 <= Game1.maxNumLevel) 
+            if (((Player)Game1.characters[0]).goToNextLevel && Game1.currentScene + 1 <= Game1.maxNumLevel) 
             {
                 ((Player)Game1.characters[0]).goToNextLevel = false;
-                goToNextLevel(numberOfLevel + 1); 
+                goToNextLevel(Game1.currentScene + 1);
+                changeNextScene(); 
             }
         }
     }
@@ -184,29 +185,32 @@ public class Level : Scene
                 ((Enemy)Game1.characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);
         }
 
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White); 
+
     }
 
-    public void goToSecondLevel() 
+    public void resetLevel() 
     {
-        for(int i = 0; i < Game1.characters.Count; i++) 
+        for (int i = 0; i < Game1.characters.Count; i++)
         {
-            if (!(Game1.characters[i] is Player)) 
+            if (!(Game1.characters[i] is Player))
             {
-                Game1.characters.Remove(Game1.characters[i]); 
+                Game1.characters.Remove(Game1.characters[i]);
             }
         }
 
+        Game1.itemsOnMap.Clear();
+        Game1.tempPoints.Clear();
+
         ((Player)Game1.characters[0]).tilemap_PosX = 3;
         ((Player)Game1.characters[0]).tilemap_PosY = 3;
-        ((Player)Game1.characters[0]).levelComplition = false; 
+        ((Player)Game1.characters[0]).levelComplition = false;
 
         // generate another map based on random
         Game1.mString = Game1.tileMap.GenerateMapString(25, 10);
         Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
-
-        // Place new enemies at random positions
-        Game1.placementManager.AddEnemies(Game1.tileMap);
     }
+       
 
     public void goToNextLevel(int numLvl) 
     {
@@ -214,6 +218,12 @@ public class Level : Scene
         {
             case 2:
                 goToSecondLevel();
+                break;
+            case 3: 
+                goToThirdLevel();
+                break;
+            case 4:
+                goToFourLevel();
                 break;
             default:
                 Debug.Write("There is no level yet");
@@ -224,6 +234,57 @@ public class Level : Scene
     public void quitGame() 
     {
         System.Environment.Exit(0);
+    }
+
+    public void goToSecondLevel()
+    {
+        resetLevel();        
+
+        
+        // Place new enemies at random positions
+        Game1.placementManager.AddEnemiesLevel2();
+
+        Game1.turnManager.resetTurns();
+
+        // Place new items in the second map
+        for (int i = 0; i < 5; i++)
+        {
+            Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
+        }
+
+        Game1.itemsOnMap.Add(new Potion(Game1.tempPoints[0]));
+        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[1]));
+        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[2]));
+        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[3]));
+        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[4]));
+
+    }
+
+    public void goToThirdLevel() 
+    {
+        resetLevel();
+
+        Game1.placementManager.AddEnemiesLevel3();
+
+        // Place new items in the second map
+        for (int i = 0; i < 5; i++)
+        {
+            Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
+        }
+
+        Game1.itemsOnMap.Add(new Potion(Game1.tempPoints[0]));
+        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[1]));
+        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[2]));
+        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[3]));
+        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[4]));
+
+    }
+
+    public void goToFourLevel() 
+    {
+        resetLevel();
+
+        Game1.placementManager.AddEnemiesBossLevel(); 
     }
 }
 

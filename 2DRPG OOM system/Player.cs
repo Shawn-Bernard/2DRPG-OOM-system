@@ -270,21 +270,7 @@ public class Player : Actor
         playerInventory.inventory.Add(_item); 
         Game1.itemsOnMap.Remove(_item);
         _item.isPickUp = true; 
-    }
-
-
-    public void changeMap() 
-    {
-        // put the player in the original position
-        tilemap_PosX = 3;
-        tilemap_PosY = 3;
-        // generate another map based on random
-        Game1.mString = Game1.tileMap.GenerateMapString(25, 10);        
-        Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
-
-        // Place new enemies at random positions
-        Game1.placementManager.AddEnemies(Game1.tileMap); 
-    }
+    }        
 
     private void consumeItem(int iIndex) 
     {

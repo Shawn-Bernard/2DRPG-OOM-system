@@ -67,22 +67,39 @@ public class PlacementManager
         }
     }
 
-    public void AddEnemies(Tilemap tilemap) 
+    public void AddEnemiesLevel2() 
     {
         // Place three enemies in a random positions
         Vector2 tempVector;
 
-        tempVector = GetWalkablePoint(Game1.tileMap); 
+        //tempVector = GetWalkablePoint(Game1.tileMap); 
 
-        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+        //Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
 
-        tempVector = GetWalkablePoint(Game1.tileMap);
+        //tempVector = GetWalkablePoint(Game1.tileMap);
 
-        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+        //Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
 
         tempVector = GetWalkablePoint(Game1.tileMap);
 
         Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+    }
+
+    public void AddEnemiesLevel3() 
+    {
+        Vector2 tempVector;
+
+        tempVector = GetWalkablePoint(Game1.tileMap);
+        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+        tempVector = GetWalkablePoint(Game1.tileMap);
+        Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+        //tempVector = GetWalkablePoint(Game1.tileMap);
+        //Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+    }
+
+    public void AddEnemiesBossLevel() 
+    {
+        Game1.characters.Add(new Boss(16, 6)); 
     }
 }
 
