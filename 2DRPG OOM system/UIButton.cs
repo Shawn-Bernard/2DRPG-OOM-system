@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 public class UIButton
 {
 
-    public UIButton(Texture2D bTexture, SpriteFont bFont, string bText, Vector2 bPosition, float bWidth, float bHeight) 
+    public UIButton(Texture2D bTexture, SpriteFont bFont, string bText, Vector2 bPosition, float bWidth, float bHeight, ButtonType bType) 
     {
         buttonTexture = bTexture; 
         textFont = bFont;
@@ -21,6 +21,7 @@ public class UIButton
         width = bWidth;
         height = bHeight;
         buttonColor = Color.White;
+        Type = bType;
     }
 
     public Texture2D buttonTexture;
@@ -30,7 +31,15 @@ public class UIButton
     public Vector2 buttonPosition;
     public float width;
     public float height;
-    public Color buttonColor; 
+    public Color buttonColor;
+    public ButtonType Type; 
+
+    public enum ButtonType 
+    {
+        StartGame,
+        Exit
+    }
+
 
     public void DrawUI(GameTime gameTime, SpriteBatch _spritebatch) 
     {
@@ -47,9 +56,7 @@ public class UIButton
             && pointPosition.Y > buttonPosition.Y && pointPosition.Y < buttonPosition.Y + height;            
 
     }
+       
 
-    
-
-    
 }
 

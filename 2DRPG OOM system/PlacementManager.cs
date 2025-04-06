@@ -67,6 +67,13 @@ public class PlacementManager
         }
     }
 
+    public void AddEnemiesLevel1() 
+    {
+        // Set up the player and enemies for the first level
+        Game1.characters.Add(new Player(3, 3));
+        Game1.characters.Add(new DarkMage(20, 6));
+    }
+
     public void AddEnemiesLevel2() 
     {
         // Place three enemies in a random positions

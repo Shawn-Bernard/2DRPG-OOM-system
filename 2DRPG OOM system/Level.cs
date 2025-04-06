@@ -123,6 +123,7 @@ public class Level : Scene
             if (Game1.characters[0]._healthSystem.life > 0)
             {
                 _spriteBatch.Draw(Game1.mapTexture, new Rectangle(Game1.characters[0].tilemap_PosX * Game1.tileSize * 2, (Game1.characters[0].tilemap_PosY + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(Game1.characters[0].cropPositionX * Game1.tileSize, Game1.characters[0].cropPositionY * Game1.tileSize, Game1.tileSize, Game1.tileSize), Game1.characters[0].AColor);
+                Game1.characters[0].DrawStats(_spriteBatch, 1, 0);
 
                 if (((Player)Game1.characters[0]).levelComplition)
                     _spriteBatch.DrawString(Game1.mySpriteFont, "Level Completed", new Vector2(300, 0), Color.White);
@@ -130,13 +131,8 @@ public class Level : Scene
 
         }
         else
-        {
-            _spriteBatch.DrawString(Game1.mySpriteFont, "You Lost", new Vector2(300, 0), Color.White);
-            // All enemies disappear. They went to a party to celebrate the player's defeat.
-            for (int i = 0; i < Game1.characters.Count; i++)
-            {
-                Game1.characters[i].active = false;
-            }
+        {            
+            goToGameOver();             
         }
 
         // Draw the enemy           
@@ -149,8 +145,8 @@ public class Level : Scene
 
         _spriteBatch.DrawString(Game1.mySpriteFont, Game1.whosTurn, new Vector2(300f, 60f), Color.White);
 
-
-        Game1.characters[0].DrawStats(_spriteBatch, 1, 0);
+        
+        
 
         // Draw the projectiles if exits. Only player or dark mages can creates projectiles, so it check only those two actors
         for (int i = 0; i < Game1.characters.Count; i++)
@@ -188,29 +184,8 @@ public class Level : Scene
         _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White); 
 
     }
-
-    public void resetLevel() 
-    {
-        for (int i = 0; i < Game1.characters.Count; i++)
-        {
-            if (!(Game1.characters[i] is Player))
-            {
-                Game1.characters.Remove(Game1.characters[i]);
-            }
-        }
-
-        Game1.itemsOnMap.Clear();
-        Game1.tempPoints.Clear();
-
-        ((Player)Game1.characters[0]).tilemap_PosX = 3;
-        ((Player)Game1.characters[0]).tilemap_PosY = 3;
-        ((Player)Game1.characters[0]).levelComplition = false;
-
-        // generate another map based on random
-        Game1.mString = Game1.tileMap.GenerateMapString(25, 10);
-        Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
-    }
-       
+      
+     
 
     public void goToNextLevel(int numLvl) 
     {
@@ -230,62 +205,8 @@ public class Level : Scene
                 break; 
         }
     }
-
-    public void quitGame() 
-    {
-        System.Environment.Exit(0);
-    }
-
-    public void goToSecondLevel()
-    {
-        resetLevel();        
-
+      
         
-        // Place new enemies at random positions
-        Game1.placementManager.AddEnemiesLevel2();
-
-        Game1.turnManager.resetTurns();
-
-        // Place new items in the second map
-        for (int i = 0; i < 5; i++)
-        {
-            Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
-        }
-
-        Game1.itemsOnMap.Add(new Potion(Game1.tempPoints[0]));
-        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[1]));
-        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[2]));
-        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[3]));
-        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[4]));
-
-    }
-
-    public void goToThirdLevel() 
-    {
-        resetLevel();
-
-        Game1.placementManager.AddEnemiesLevel3();
-
-        // Place new items in the second map
-        for (int i = 0; i < 5; i++)
-        {
-            Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
-        }
-
-        Game1.itemsOnMap.Add(new Potion(Game1.tempPoints[0]));
-        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[1]));
-        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[2]));
-        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[3]));
-        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[4]));
-
-    }
-
-    public void goToFourLevel() 
-    {
-        resetLevel();
-
-        Game1.placementManager.AddEnemiesBossLevel(); 
-    }
 }
 
 

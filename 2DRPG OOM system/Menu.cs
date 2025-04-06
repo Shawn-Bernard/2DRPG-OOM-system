@@ -43,7 +43,7 @@ public class Menu : Scene
 
             if(currentMouseState.LeftButton == ButtonState.Pressed && buttons[i].focused) 
             {
-                StartGame();
+                DoButtonAction(buttons[i].Type.ToString()); 
             }           
         }
 
@@ -64,6 +64,19 @@ public class Menu : Scene
 
     }
 
-   
+    public void DoButtonAction(string actionString)
+    {
+        switch (actionString)
+        {
+            case "StartGame":
+                StartGame();
+                break;            
+            case "Exit":
+                quitGame(); 
+                break;
+        }
+    }
+
+
 }
 

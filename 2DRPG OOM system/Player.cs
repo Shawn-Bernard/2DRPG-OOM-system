@@ -11,10 +11,10 @@ public class Player : Actor
 
     public Player(int iPosX, int iPosY)
     {
-        _healthSystem.health = 15;
+        _healthSystem.health = 15; 
         _healthSystem.power = 1;
-        _healthSystem.shield = 3;
-        _healthSystem.life = 3;
+        _healthSystem.shield = 3; 
+        _healthSystem.life = 3;  
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
         _healthSystem.isStunned = false;
@@ -30,7 +30,8 @@ public class Player : Actor
         AColor = Color.White;
         _healthSystem.invincibility = false;
         playerInventory.SetInventorySlots(5); 
-        shot = false; 
+        shot = false;
+        resetInventory(); 
     }
 
     private KeyboardState oldState;     
@@ -287,6 +288,11 @@ public class Player : Actor
 
             keyPress = false;
         }
+    }
+
+    private void resetInventory() 
+    {
+        playerInventory.inventory.Clear();
     }
 
 }
