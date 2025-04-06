@@ -30,8 +30,8 @@ public class FireballScroll : Item
                 // only creates a fire ball if there is no fireball. If it's already exists, the player should be able to make one
                 if (((Player)Game1.characters[0]).fireBall == null)
                 {
-                    ((Player)Game1.characters[0]).fireBall = new FireBall(new Vector2(Game1.characters[0].tilemap_PosX + Game1.characters[0].facingDir.X,
-                                                                     Game1.characters[0].tilemap_PosY + Game1.characters[0].facingDir.Y),
+                    ((Player)Game1.characters[0]).fireBall = new FireBall(new Vector2(Game1.characters[0].tilemap_PosX,
+                                                                     Game1.characters[0].tilemap_PosY),
                                                                      Game1.characters[0].facingDir, 5, Color.Red);
 
                     ((Player)Game1.characters[0]).fireBall.isFromPlayer = true; 

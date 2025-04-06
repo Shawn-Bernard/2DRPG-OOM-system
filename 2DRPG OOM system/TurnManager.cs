@@ -24,7 +24,9 @@ public class TurnManager
             }
             else
             {
-                characterTurn++; 
+                characterTurn++;
+                for (int i = 0; i < Game1.characters.Count; i++)
+                    Game1.characters[i].feedback = ""; 
             }
             
         }

@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using _2DRPG_OOM_system;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.Intrinsics.X86;
 
 
 
@@ -49,6 +51,8 @@ public class Actor
 
     public float CountingTime = 0;
     public bool isDamage;
+
+    public string feedback = "";  // When any actor receives damage or healing, this will show up as a feedback visualization
 
     // This check if two objects are colliding, is will ask two position (x,y)
     public bool CheckForObjCollision(int Xo, int Yo, int Xt, int Yt) 
@@ -109,13 +113,14 @@ public class Actor
         }
     }
     
-    public void damageVisualization() 
+    public void damageVisualization(int damage) 
     {
         // The actor turn red to visualize that it get hit
         AColor = Color.Red;
-        isDamage = true; 
-
+        isDamage = true;
+        feedback = "- " + damage.ToString(); 
     }
+        
 
     public void damageTiming(float _time, GameTime _gameTime) 
     {
@@ -125,9 +130,13 @@ public class Actor
         {
             AColor = Color.White;
             isDamage = false;
+            feedback = ""; 
         }
     }
-
+    protected bool CheckForUnWalkable(int dx, int dy)
+    {
+        return checkingForCollision(Game1.tileMap, '#', this, dx, dy) || checkingForCollision(Game1.tileMap, '$', this, dx, dy); 
+    }
 }
 
 

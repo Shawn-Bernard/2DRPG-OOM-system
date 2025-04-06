@@ -51,7 +51,7 @@ public class Spider : Enemy
                 if (CheckForObjCollision(tilemap_PosX + nextMove.X, tilemap_PosY + nextMove.Y, Game1.characters[0].tilemap_PosX, Game1.characters[0].tilemap_PosY))
                 {
                     Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
-                    Game1.characters[0].damageVisualization(); 
+                    Game1.characters[0].damageVisualization(_healthSystem.power); 
                     
                 }
                 else 

@@ -41,6 +41,12 @@ public class Scene
         System.Environment.Exit(0);
     }
 
+    public void goToMenu() 
+    {
+        Game1.currentScene = 0; 
+        ClearAllLists();
+    }
+
     public void resetLevel()
     {
         for (int i = 0; i < Game1.characters.Count; i++)
@@ -136,6 +142,11 @@ public class Scene
     public void goToGameOver() 
     {
         Game1.currentScene = 6;
+        ClearAllLists(); 
+    }
+
+    public void ClearAllLists() 
+    {
         Game1.itemsOnMap.Clear();
         Game1.tempPoints.Clear();
         Game1.characters.Clear();

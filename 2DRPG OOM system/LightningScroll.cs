@@ -29,6 +29,7 @@ public class LightningScroll : Item
                 if (Game1.characters[i] is Enemy)
                 {
                     Game1.characters[i]._healthSystem.TakeDamage(3);
+                    Game1.characters[i].damageVisualization(3); 
                 }
             }
             isUsed = true;

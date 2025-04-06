@@ -75,7 +75,7 @@ public class Ghost : Enemy
                     if (CheckForObjCollision(tilemap_PosX + mvX, tilemap_PosY + mvY, Game1.characters[i].tilemap_PosX, Game1.characters[i].tilemap_PosY) && Game1.characters[i] is Player)
                     {
                         Game1.characters[0]._healthSystem.TakeDamage(_healthSystem.power);
-                        Game1.characters[0].damageVisualization(); 
+                        Game1.characters[0].damageVisualization(_healthSystem.power); 
                         mvX = 0;
                         mvY = 0;
                     }

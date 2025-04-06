@@ -16,7 +16,7 @@ public class HealthSystem
     {
         get { return MaxHealth; }
         set { MaxHealth = Math.Max(1, Math.Min(100, value)); }
-    }
+    }    
 
     private int Power;
     public int power

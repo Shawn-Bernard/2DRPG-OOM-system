@@ -45,7 +45,7 @@ public class Projectile
                 {
                     hit = true;
                     Game1.characters[i]._healthSystem.TakeDamage(power);
-                    Game1.characters[i].damageVisualization(); 
+                    Game1.characters[i].damageVisualization(power); 
                 }
                 
             }

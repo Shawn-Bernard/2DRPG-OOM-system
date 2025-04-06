@@ -31,7 +31,7 @@ public class Player : Actor
         _healthSystem.invincibility = false;
         playerInventory.SetInventorySlots(5); 
         shot = false;
-        resetInventory(); 
+        resetInventory();         
     }
 
     private KeyboardState oldState;     
@@ -49,7 +49,7 @@ public class Player : Actor
 
         // visualization if the player has been damaged
         if (isDamage) 
-        {
+        {             
             damageTiming(0.25f, gameTime); 
         }
 
@@ -64,9 +64,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.A))
                     {
-                        moveDir = new Vector2(-1, 0);  // Vector for moving left
-                        facingDir = moveDir;     // the direction the player will be facing (Left)
-                        keyPress = true;     // A button has been pressed
+                        PlayerMovement(-1,0); 
                     }
                     
                 }
@@ -74,18 +72,14 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D))
                     {
-                        moveDir = new Vector2(1, 0);  // Vector for moving right
-                        facingDir = moveDir;    // the direction the player will be facing (Right)
-                        keyPress = true;         // A button has been pressed
+                        PlayerMovement(1, 0); 
                     }
                 }
                 else if (keyboardState.IsKeyDown(Keys.W))
                 {
                     if (!oldState.IsKeyDown(Keys.W))
                     {
-                        moveDir = new Vector2(0, -1);  // Vector for moving up
-                        facingDir = moveDir;   // the direction the player will be facing
-                        keyPress = true;   // A button has been pressed
+                        PlayerMovement(0, -1); 
                     }
                         
                     
@@ -94,9 +88,7 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.S))
                     {
-                        moveDir = new Vector2(0, 1);    // Vector for moving down
-                        facingDir=moveDir;  // the direction the player will be facing
-                        keyPress = true;  // A button has been pressed
+                        PlayerMovement(0, 1); 
                     }
                  
                 }
@@ -146,7 +138,7 @@ public class Player : Actor
             
             if (keyPress) 
             {
-                if(checkingForCollision(Game1.tileMap, '#', this, (int)moveDir.X, (int)moveDir.Y) || checkingForCollision(Game1.tileMap, '$', this, (int)moveDir.X, (int)moveDir.Y)) 
+                if(CheckForUnWalkable((int)moveDir.X, (int)moveDir.Y))
                 {
                     // if the player collides with a wall or a not walkable tile, the player won't move. 
                     moveDir = new Vector2(0, 0);                   
@@ -162,8 +154,8 @@ public class Player : Actor
                             // Ghosts don't take damage in this way
                             if (!(Game1.characters[i] is Ghost))
                             {
-                                Game1.characters[i]._healthSystem.TakeDamage(this._healthSystem.power);
-                                Game1.characters[i].damageVisualization(); 
+                                Game1.characters[i]._healthSystem.TakeDamage(_healthSystem.power);
+                                Game1.characters[i].damageVisualization(_healthSystem.power); 
                             }
 
                             moveDir = new Vector2(0, 0);
@@ -247,6 +239,7 @@ public class Player : Actor
         _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 25), Color.White);
         _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(125, posY +25), Color.White);
         _spriteBatch.DrawString(Game1.mySpriteFont, "Inventory", new Vector2(0, posY + 50), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, feedback, new Vector2(tilemap_PosX * Game1.tileSize * 2 - 5, ((tilemap_PosY + 5) * Game1.tileSize * 2) - 25), Color.White); 
 
         // The UI for the inventory
         for(int i = 0; i < 5; i++) 
@@ -293,6 +286,13 @@ public class Player : Actor
     private void resetInventory() 
     {
         playerInventory.inventory.Clear();
+    }
+
+    private void PlayerMovement(int dx, int dy) 
+    {
+        moveDir = new Vector2(dx, dy);  // Vector for moving right
+        facingDir = moveDir;    // the direction the player will be facing (Right)
+        keyPress = true;         // A button has been pressed
     }
 
 }

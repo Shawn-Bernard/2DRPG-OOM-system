@@ -28,6 +28,7 @@ public class SacredPotion : Item
             if (Game1.characters[0] is Player)
             {
                 Game1.characters[0]._healthSystem.invincibility = true;
+                Game1.characters[0].feedback = "+ " + (Game1.characters[0]._healthSystem.maxHealth - Game1.characters[0]._healthSystem.health).ToString(); 
                 Game1.characters[0]._healthSystem.RecoverHealth(Game1.characters[0]._healthSystem.maxHealth); 
             }
 
