@@ -69,7 +69,7 @@ public class PlacementManager
 
     public void AddEnemiesLevel1() 
     {
-        // Set up the player and enemies for the first level
+        // Set up the player and enemies for the first level in a set position
         Game1.characters.Add(new Player(3, 3));
         Game1.characters.Add(new DarkMage(20, 6));
        
@@ -77,19 +77,13 @@ public class PlacementManager
 
     public void AddEnemiesLevel2() 
     {
-        // Place three enemies in a random positions
+        // Place two enemies in a random positions
         Vector2 tempVector;
 
-        //tempVector = GetWalkablePoint(Game1.tileMap); 
-
-        //Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
-
-        //tempVector = GetWalkablePoint(Game1.tileMap);
-
-        //Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+        tempVector = GetWalkablePoint(Game1.tileMap); 
+        Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));        
 
         tempVector = GetWalkablePoint(Game1.tileMap);
-
         Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
 
         Game1.turnManager.resetTurns();
@@ -97,20 +91,25 @@ public class PlacementManager
 
     public void AddEnemiesLevel3() 
     {
+        // place three enemies in a random position
+
         Vector2 tempVector;
 
         tempVector = GetWalkablePoint(Game1.tileMap);
         Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+
         tempVector = GetWalkablePoint(Game1.tileMap);
         Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
-        //tempVector = GetWalkablePoint(Game1.tileMap);
-        //Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+
+        tempVector = GetWalkablePoint(Game1.tileMap);
+        Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
 
         Game1.turnManager.resetTurns();
     }
 
     public void AddEnemiesBossLevel() 
     {
+        // Adding the boss
         Game1.characters.Add(new Boss(16, 6));
         Game1.turnManager.resetTurns();
     }

@@ -1,11 +1,7 @@
 ﻿using _2DRPG_OOM_system;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 
 public class Scene
@@ -30,6 +26,7 @@ public class Scene
 
     public void StartGame() 
     {
+        // set the scene where the first level is
         Game1.currentScene = 1;
         goToFirstLevel(); 
     }      
@@ -41,12 +38,15 @@ public class Scene
 
     public void goToMenu() 
     {
+        // go to the scene where the menu is
         Game1.currentScene = 0; 
         ClearAllLists();
     }
 
     public void resetLevel()
     {
+        // reset all the values when the player enters into a new level
+
         for (int i = 0; i < Game1.characters.Count; i++)
         {
             if (!(Game1.characters[i] is Player))
@@ -68,11 +68,13 @@ public class Scene
     }
     public void goToFirstLevel()
     {
+        // Setting the first level
+
         Game1.characters.Clear();
         Game1.placementManager.AddEnemiesLevel1();
         Game1.itemsOnMap.Clear();
 
-        Game1.tileMap.LoadPremadeMap("LoadedMap1.txt");
+        Game1.tileMap.LoadPremadeMap("LoadedMap1.txt");   // obtaining the string from a text file
         Game1.tileMap.BorderWithWall();         
 
         for (int i = 0; i < 10; i++)
@@ -87,8 +89,8 @@ public class Scene
 
     public void goToSecondLevel()
     {
+        // set the second level
         resetLevel();
-
 
         // Place new enemies at random positions
         Game1.placementManager.AddEnemiesLevel2();
@@ -111,13 +113,14 @@ public class Scene
 
     public void goToThirdLevel()
     {
+        // sete the third level
         resetLevel();
 
         Game1.placementManager.AddEnemiesLevel3();
 
         Game1.turnManager.resetTurns();
 
-        // Place new items in the second map
+        // Place new items in the third map
         for (int i = 0; i < 5; i++)
         {
             Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
@@ -133,10 +136,12 @@ public class Scene
 
     public void goToFourLevel()
     {
+        // set the four level (boss level)
         resetLevel();
 
         Game1.placementManager.AddEnemiesBossLevel();        
 
+        // place new items in the forth map (Boss level)
         for (int i = 0; i < 3; i++) 
         {
             Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
@@ -150,12 +155,14 @@ public class Scene
 
     public void goToGameOver() 
     {
+        // go to the scene where the game over is
         Game1.currentScene = 6;
         ClearAllLists(); 
     }
 
     public void ClearAllLists() 
     {
+        // Clearing all the list when the game is restarted or ended
         Game1.itemsOnMap.Clear();
         Game1.tempPoints.Clear();
         Game1.characters.Clear();

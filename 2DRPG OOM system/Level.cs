@@ -26,18 +26,10 @@ public class Level : Scene
 
         // This is the logic for the turns 
         Game1.turnManager.UpdateTurnManager(gameTime);
+                    
+               
 
-        for (int i = 0; i < Game1.projectiles.Count; i++)
-            Game1.projectiles[i].ProjectileUpdate(gameTime);
-
-        for (int i = 0; i < Game1.projectiles.Count; i++)
-        {
-            if (Game1.projectiles[i].hit)
-            {
-                Game1.projectiles.Remove(Game1.projectiles[i]);
-            }
-        }
-
+        // update the projectiles for each actor who are able to create one: player, dark mage and the Boss
         for (int i = 0; i < Game1.characters.Count; i++)
         {
             if (Game1.characters[i] is DarkMage)
@@ -69,7 +61,17 @@ public class Level : Scene
 
         }
 
-        if (Game1.characters[0] is Player)
+        // Check if the projectiles have collided
+        for (int i = 0; i < Game1.projectiles.Count; i++)
+        {
+            if (Game1.projectiles[i].hit)
+            {
+                Game1.projectiles.Remove(Game1.projectiles[i]);
+            }
+        }
+
+        // the logic of telling which phase is: Player or Enemies
+        if (Game1.characters[0] is Player)  // The player is suppose to be in index 0, this conditional is for precaution
         {
             if (Game1.characters[0]._healthSystem.life > 0)
             {
@@ -80,35 +82,35 @@ public class Level : Scene
 
             }
 
+            // This update the items on the map. Only the player can pick it up
             for (int i = 0; i < Game1.itemsOnMap.Count; i++)
             {
                 if (Game1.itemsOnMap[i].isUsed)
                     Game1.itemsOnMap.Remove(Game1.itemsOnMap[i]);
             }
-        }
-        
 
-        if (Game1.characters[0] is Player) 
-        {
-            if (((Player)Game1.characters[0]).levelComplition && !openDoor) 
+            // This open the door 
+            if (((Player)Game1.characters[0]).levelComplition && !openDoor)
             {
                 openDoor = true;
-                Game1.tileMap.OpenDoor(); 
+                Game1.tileMap.OpenDoor();
             }
 
-
-            if (((Player)Game1.characters[0]).goToNextLevel && Game1.currentScene + 1 <= Game1.maxNumLevel) 
+            // When the player enters into the door, go to the next level
+            if (((Player)Game1.characters[0]).goToNextLevel && Game1.currentScene + 1 <= Game1.maxNumLevel)
             {
                 ((Player)Game1.characters[0]).goToNextLevel = false;
                 openDoor = false;
                 goToNextLevel(Game1.currentScene + 1);
-                changeNextScene(); 
+                changeNextScene();
             }
-        }
+        }        
+        
     }
 
     public override void DrawScene(GameTime gameTime, SpriteBatch _spriteBatch)
     {
+        // Draw the tilemap
         for (int i = 0; i < 25; i++)
         {
             for (int j = 0 + 5; j < 10 + 5; j++)
@@ -140,7 +142,7 @@ public class Level : Scene
         }
         else
         {            
-            goToGameOver();             
+            goToGameOver();     // when the player's life reach to 0, is defeated so is game over
         }
 
         // Draw the enemy           
@@ -156,7 +158,7 @@ public class Level : Scene
         
         
 
-        // Draw the projectiles if exits. Only player or dark mages can creates projectiles, so it check only those two actors
+        // Draw the projectiles if exits. Only player, dark mages and the boss can create projectiles, so it check only those three actors
         for (int i = 0; i < Game1.characters.Count; i++)
         {
             if (Game1.characters[i] is DarkMage)
@@ -190,9 +192,9 @@ public class Level : Scene
         }
 
         if(numberOfLevel!=4)
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White); 
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White);  // This show in which level the player is
         else
-            _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(300, 120), Color.White);
+            _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(300, 120), Color.White);  // The four level is the boss level
 
 
     }
@@ -201,6 +203,8 @@ public class Level : Scene
 
     public void goToNextLevel(int numLvl) 
     {
+        //This initialize the corresponding level when the player jumps into it
+
         switch (numLvl) 
         {
             case 2:
