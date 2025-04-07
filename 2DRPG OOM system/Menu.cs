@@ -12,11 +12,8 @@ public class Menu : Scene
 {
     public List<UIButton> buttons = new List<UIButton>(); 
 
-    public List<UIText> textList = new List<UIText>();
+    public List<UIText> textList = new List<UIText>(); 
 
-    public SpriteFont txtFont;
-
-    
 
     public override void SceneUpdate(GameTime gameTime)
     {
@@ -73,6 +70,9 @@ public class Menu : Scene
                 break;            
             case "Exit":
                 quitGame(); 
+                break;
+            case "ToMenu":
+                goToMenu();
                 break;
         }
     }

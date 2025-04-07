@@ -8,13 +8,13 @@ public class Inventory
 {
     public List<Item> inventory = new List<Item>();
     
-    private int InventorySlots;
+    private int InventorySlots;  // how many item the inventory can hold
 
     public int inventorySlots 
     {
         get { return InventorySlots; }
 
-        set { InventorySlots = Math.Max(1, value); }
+        set { InventorySlots = Math.Max(1, value); }   // the inventory cannot have negative numbers or 0 as slot numbers
     }
 
     public void SetInventorySlots(int num) 

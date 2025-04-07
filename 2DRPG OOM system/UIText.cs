@@ -22,12 +22,7 @@ using System.Threading.Tasks;
     public SpriteFont textFont;
     public Vector2 textPosition;
     public Color textColor;
-
-    public virtual void SceneUpdate(GameTime gameTime)
-    {
-
-    }
-
+        
     public void DrawText(GameTime gameTime, SpriteBatch _spriteBatch) 
     {
         _spriteBatch.DrawString(textFont, Text, textPosition, textColor); 

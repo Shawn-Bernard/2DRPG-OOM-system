@@ -13,7 +13,7 @@ public class LightningScroll : Item
         cropPosX = 10;
         cropPosY = 10;
         name = "Scroll of Lightning";
-        description = "Throw a lightning, deals 2 damage to all active enemies";
+        description = "Throw a lightning, deals 3 damage to all active enemies";
         isPickUp = false;
         isUsed = false;
         itemPosition = itemPos;

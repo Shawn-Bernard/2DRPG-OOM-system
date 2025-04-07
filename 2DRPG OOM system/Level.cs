@@ -18,8 +18,8 @@ public class Level : Scene
     }
 
 
-    public int numberOfLevel;
-
+    private int numberOfLevel;
+    private bool openDoor = false; 
 
     public override void SceneUpdate(GameTime gameTime)
     {
@@ -90,9 +90,17 @@ public class Level : Scene
 
         if (Game1.characters[0] is Player) 
         {
+            if (((Player)Game1.characters[0]).levelComplition && !openDoor) 
+            {
+                openDoor = true;
+                Game1.tileMap.OpenDoor(); 
+            }
+
+
             if (((Player)Game1.characters[0]).goToNextLevel && Game1.currentScene + 1 <= Game1.maxNumLevel) 
             {
                 ((Player)Game1.characters[0]).goToNextLevel = false;
+                openDoor = false;
                 goToNextLevel(Game1.currentScene + 1);
                 changeNextScene(); 
             }
@@ -181,7 +189,11 @@ public class Level : Scene
                 ((Enemy)Game1.characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);
         }
 
+        if(numberOfLevel!=4)
         _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White); 
+        else
+            _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(300, 120), Color.White);
+
 
     }
       

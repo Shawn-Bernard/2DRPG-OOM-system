@@ -155,6 +155,7 @@ public class DarkMage : Enemy
             {
                 if (miasmaFire.hit) 
                 {
+                    // waits for the miasma ball to collide to finish the turn
                     shot = false;
                     miasmaFire = null; 
                     FinishTurn(); 
@@ -174,6 +175,7 @@ public class DarkMage : Enemy
 
     private void ShootTheMiasmaBall(int dx, int dy) 
     {
+        // Based on a direction, the dark mage will shoot a misma ball
         if (!shot && miasmaFire == null)
         {
             miasmaFire = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY), new Vector2(dx, dy), 4, Color.Purple);

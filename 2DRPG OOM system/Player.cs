@@ -2,8 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
 using System.Diagnostics;
+
 
 
 public class Player : Actor
@@ -11,10 +11,10 @@ public class Player : Actor
 
     public Player(int iPosX, int iPosY)
     {
-        _healthSystem.health = 15; 
+        _healthSystem.health = 15;  
         _healthSystem.power = 1;
-        _healthSystem.shield = 3; 
-        _healthSystem.life = 3;  
+        _healthSystem.shield = 3;  
+        _healthSystem.life = 3;   
         tilemap_PosX = iPosX;
         tilemap_PosY = iPosY;
         _healthSystem.isStunned = false;
@@ -38,9 +38,10 @@ public class Player : Actor
     public bool keyPress;
     public Inventory playerInventory = new Inventory();     
     public Projectile fireBall = null;
-    public bool shot;
-    public bool levelComplition;
-    public bool goToNextLevel; 
+    public bool shot; 
+    public bool levelComplition;  // Its true when the current level is completed
+    public bool goToNextLevel; // this allows the player to go to the next level
+    public bool aimingMode; // This allow the player to shoot 
    
 
     public override void TurnUpdate(GameTime gameTime)
@@ -64,7 +65,10 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.A))
                     {
-                        PlayerMovement(-1,0); 
+                        if (!aimingMode)
+                            PlayerMovement(-1, 0);  // if is not in aiming mode, move normally
+                        else
+                            ShootFireBall(-1, 0);  // shoot the fire ball in the left direction
                     }
                     
                 }
@@ -72,14 +76,20 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.D))
                     {
-                        PlayerMovement(1, 0); 
+                        if (!aimingMode)
+                            PlayerMovement(1, 0);  // if is not in aiming mode, move normally
+                        else
+                            ShootFireBall(1, 0);  // shoot the fire ball in the right direction
                     }
                 }
                 else if (keyboardState.IsKeyDown(Keys.W))
                 {
                     if (!oldState.IsKeyDown(Keys.W))
                     {
-                        PlayerMovement(0, -1); 
+                        if (!aimingMode)
+                            PlayerMovement(0, -1);  // if is not in aiming mode, move normally
+                        else
+                            ShootFireBall(0, -1);  // shoot the fire ball in the up direction
                     }
                         
                     
@@ -88,7 +98,10 @@ public class Player : Actor
                 {
                     if (!oldState.IsKeyDown(Keys.S))
                     {
-                        PlayerMovement(0, 1); 
+                        if(!aimingMode)
+                        PlayerMovement(0, 1);  // if is not in aiming mode, move normally
+                        else
+                            ShootFireBall(0,1);  // shoot the fire ball in the down direction
                     }
                  
                 }
@@ -174,7 +187,7 @@ public class Player : Actor
                         }
                     }
 
-                    if (!shot)
+                    if (!shot && !goToNextLevel)
                     {
                         Movement((int)moveDir.X, (int)moveDir.Y);
                         FinishTurn();
@@ -190,6 +203,7 @@ public class Player : Actor
                 {
                     shot = false;
                     fireBall = null;
+                    aimingMode = false;
                     FinishTurn();
                 }
             }
@@ -276,7 +290,7 @@ public class Player : Actor
             if (playerInventory.inventory[iIndex].isUsed)
                 playerInventory.inventory.Remove(playerInventory.inventory[iIndex]);
 
-            if(!shot)
+            if(!shot && !aimingMode)
             FinishTurn();
 
             keyPress = false;
@@ -293,6 +307,13 @@ public class Player : Actor
         moveDir = new Vector2(dx, dy);  // Vector for moving right
         facingDir = moveDir;    // the direction the player will be facing (Right)
         keyPress = true;         // A button has been pressed
+    }
+
+    private void ShootFireBall(int dx, int dy) 
+    {
+        fireBall = new FireBall(new Vector2(tilemap_PosX, tilemap_PosY), new Vector2(dx, dy), 5, Color.Red);
+        fireBall.isFromPlayer = true;
+        shot = true;
     }
 
 }

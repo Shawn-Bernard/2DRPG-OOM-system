@@ -1,10 +1,6 @@
 ﻿using _2DRPG_OOM_system;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 
 public class FireballScroll : Item
@@ -30,12 +26,9 @@ public class FireballScroll : Item
                 // only creates a fire ball if there is no fireball. If it's already exists, the player should be able to make one
                 if (((Player)Game1.characters[0]).fireBall == null)
                 {
-                    ((Player)Game1.characters[0]).fireBall = new FireBall(new Vector2(Game1.characters[0].tilemap_PosX,
-                                                                     Game1.characters[0].tilemap_PosY),
-                                                                     Game1.characters[0].facingDir, 5, Color.Red);
-
-                    ((Player)Game1.characters[0]).fireBall.isFromPlayer = true; 
-                    ((Player)Game1.characters[0]).shot = true; 
+                    // The player enters into aiming move, which allows the player to choose the direction the fire ball will take
+                    ((Player)Game1.characters[0]).aimingMode = true;  
+                    ((Player)Game1.characters[0]).feedback = "Aim";   // this tells to the player that is in aiming mode
                 }
             }
 

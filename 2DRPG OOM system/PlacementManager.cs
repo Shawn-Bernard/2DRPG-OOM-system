@@ -72,6 +72,7 @@ public class PlacementManager
         // Set up the player and enemies for the first level
         Game1.characters.Add(new Player(3, 3));
         Game1.characters.Add(new DarkMage(20, 6));
+       
     }
 
     public void AddEnemiesLevel2() 
@@ -90,6 +91,8 @@ public class PlacementManager
         tempVector = GetWalkablePoint(Game1.tileMap);
 
         Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+
+        Game1.turnManager.resetTurns();
     }
 
     public void AddEnemiesLevel3() 
@@ -102,11 +105,14 @@ public class PlacementManager
         Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
         //tempVector = GetWalkablePoint(Game1.tileMap);
         //Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+
+        Game1.turnManager.resetTurns();
     }
 
     public void AddEnemiesBossLevel() 
     {
-        Game1.characters.Add(new Boss(16, 6)); 
+        Game1.characters.Add(new Boss(16, 6));
+        Game1.turnManager.resetTurns();
     }
 }
 

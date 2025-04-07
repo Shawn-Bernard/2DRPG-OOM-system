@@ -23,28 +23,35 @@ namespace _2DRPG_OOM_system
         // Creating the Tilemap 
         public static Tilemap tileMap = new Tilemap();
         public static string mString;
-        private KeyboardState oldState;        
+               
         
+        // It tell if is the player phase or enemy phase
         public static string whosTurn = "";
        
-
+        // The object which manages the turns
         public static TurnManager turnManager = new TurnManager();
+
+        // The list of item that are going to be in the map
         public static List<Item> itemsOnMap = new List<Item>();
 
+        // List of projectiles
         public static List<Projectile> projectiles = new List<Projectile>();
 
+        // This object put the items or enemies in random positions
         public static PlacementManager placementManager = new PlacementManager();
+        // this list has temporary positions
         public static List<Vector2> tempPoints = new List<Vector2>();
 
-        public List<Scene> GameScenes = new List<Scene>();
+        // This list will contains all the scenes the game will have
+        private List<Scene> GameScenes = new List<Scene>();
 
       
-        public static int maxNumLevel;
-        public static int currentScene; 
-        public Menu mainMenu = new Menu();
-        public Texture2D button01;
-        public Menu EndScreen = new Menu();
-        public Menu GameOver = new Menu(); 
+        public static int maxNumLevel;  // How many scenes the game has
+        public static int currentScene;  // The scene that is currently playing 
+        private Menu mainMenu = new Menu();  // Creating a Scene for the main menu
+        private Texture2D button01;  // Creating a button for using in different scenes
+        private Menu EndScreen = new Menu();  // Creating the scene when reach the end of the game and win
+        private Menu GameOver = new Menu();  // Creating the scene when you lose
         
         
         public Game1()
@@ -63,24 +70,27 @@ namespace _2DRPG_OOM_system
             mapTexture = Content.Load<Texture2D>("The_Tilemap");            
             mySpriteFont = Content.Load<SpriteFont>("Font");
             button01 = Content.Load<Texture2D>("button_brown"); 
-            //mString = tileMap.GenerateMapString(25, 10);
-            //tileMap.LoadPremadeMap("LoadedMap1.txt");
-            //tileMap.ConvertToMap(mString, tileMap.multidimensionalMap);
-            oldState = Keyboard.GetState();         
-                               
-            
+                              
+            // All the elements for the Main Menu
             mainMenu.buttons.Add(new UIButton(button01, mySpriteFont, "Start Game", new Vector2(325, 200), 160, 64, UIButton.ButtonType.StartGame));
             mainMenu.textList.Add(new UIText("A Soldier 2D Mission", mySpriteFont, new Vector2(300, 100), Color.Black));
             mainMenu.buttons.Add(new UIButton(button01, mySpriteFont, "Quit", new Vector2(325, 300), 160, 64, UIButton.ButtonType.Exit));
             mainMenu.backgroundColor = Color.Lerp(Color.Gray, Color.Honeydew, 0.5f);
+
+            // All the element for the End Screen (When you win the game)
             EndScreen.textList.Add(new UIText("The End", mySpriteFont, new Vector2(Window.ClientBounds.Width/2 - 50, 200), Color.Black));
             EndScreen.textList.Add(new UIText("Congratulation, you won!", mySpriteFont, new Vector2(Window.ClientBounds.Width/2 - 125, 100), Color.Black));
+            EndScreen.buttons.Add(new UIButton(button01, mySpriteFont, "Play Again", new Vector2(Window.ClientBounds.Width / 2, 300), 160, 64, UIButton.ButtonType.StartGame));
+            EndScreen.buttons.Add(new UIButton(button01, mySpriteFont, "Go to Menu", new Vector2(Window.ClientBounds.Width / 2, 400), 160, 64, UIButton.ButtonType.ToMenu));
             EndScreen.backgroundColor = Color.Lerp(Color.Gray, Color.Honeydew, 0.75f); 
+
+            // All the element for the Game Over Screen (When you lose)
             GameOver.textList.Add(new UIText("Game Over", mySpriteFont, new Vector2(Window.ClientBounds.Width / 2 - 50, 50), Color.White));
             GameOver.buttons.Add(new UIButton(button01, mySpriteFont, "Try Again", new Vector2(325, 200), 160, 64, UIButton.ButtonType.StartGame));
-            GameOver.buttons.Add(new UIButton(button01, mySpriteFont, "Exit", new Vector2(325, 300), 160, 64, UIButton.ButtonType.Exit)); 
+            GameOver.buttons.Add(new UIButton(button01, mySpriteFont, "Go to Menu", new Vector2(325, 300), 160, 64, UIButton.ButtonType.ToMenu)); 
             GameOver.backgroundColor = Color.Lerp(Color.Black, Color.Honeydew, 0.25f); 
 
+            //Store all the scenes in the list of scene 
             GameScenes.Add(mainMenu);  
             GameScenes.Add(new Level(1));
             GameScenes.Add(new Level(2));
@@ -89,6 +99,7 @@ namespace _2DRPG_OOM_system
             GameScenes.Add(EndScreen);
             GameScenes.Add(GameOver);
 
+            // Once all the scenes are created and stored in the list of scene, we have how many scenes the game has
             maxNumLevel = GameScenes.Count; 
         }
 
@@ -104,10 +115,9 @@ namespace _2DRPG_OOM_system
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            GameScenes[currentScene].SceneUpdate(gameTime);           
+            GameScenes[currentScene].SceneUpdate(gameTime);          
             
             
-
             base.Update(gameTime);
             
         }

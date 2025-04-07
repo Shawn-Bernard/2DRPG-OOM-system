@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 
     public char[,] multidimensionalMap = new char[mapSizeX, mapSizeY];
 
-    public string loadedMap = @"2DRPG-OOM-system\2DRPG OOM system\LoadedMap1.txt"; 
 
     public string GenerateMapString(int width, int height) 
     {
@@ -43,7 +42,7 @@ using System.Threading.Tasks;
                 else if ((j == height - 2) && !(i == width - 2))
                     mapMatrix[i, j] = '*'; // 3rd rule: The last row before the walls will be a normal field
                 else if ((i == width - 2) && (j == height - 2))
-                    mapMatrix[i, j] = '@';  //4th rule: This locates where the door for the next map are going to be
+                    mapMatrix[i, j] = '!';  //4th rule: This locates where the door for the next map are going to be
                 else
                     mapMatrix[i, j] = GenerateChar();  //This generate the char at random
             }
@@ -137,9 +136,13 @@ using System.Threading.Tasks;
                 {
                     daMap[i, j] = '$';
                 }
-                else if (lines[j][i] == '@') //Door
+                else if (lines[j][i] == '@') //Door Closed
                 {
                     daMap[i, j] = '@'; 
+                }
+                else if (lines[j][i] == '!') // Door Open
+                {
+                    daMap[i, j] = '!'; 
                 }
                 else
                 {
@@ -155,6 +158,44 @@ using System.Threading.Tasks;
         return cMap[i, j];
     }
 
+    public void OpenDoor() 
+    {
+        // When the player complete the level, the close door will open. I am changing the sprite here to a open door sprite
+        
+        for(int i = 0; i < multidimensionalMap.GetLength(0); i++) 
+        {
+            for(int j = 0; j < multidimensionalMap.GetLength(1); j++) 
+            {
+                if (multidimensionalMap[i,j] == '!')  // check if in that position, theres a closed door
+                {                    
+                    multidimensionalMap[i, j] = '@';  // the door opens
+                }
+            }
+        }
+
+
+        
+    }
+
+    public void BorderWithWall() 
+    {
+        int num1 = multidimensionalMap.GetLength(0);
+        int num2 = multidimensionalMap.GetLength(1);
+        int num3 = num1 + num2; 
+        // This make sure the borders are wall. For some reason, loading a premade map the right down corner is not a wall
+        for (int i = 0; i < multidimensionalMap.GetLength(0); i++)
+        {
+            for (int j = 0; j < multidimensionalMap.GetLength(1); j++)
+            {
+                if (i == 0 || i == multidimensionalMap.GetLength(0) - 1 || j == 0 || j == multidimensionalMap.GetLength(1))
+                {
+                    if (multidimensionalMap[i, j] != '#')
+                        multidimensionalMap[i, j] = '#'; 
+                }
+            }
+        }
+       
+    }
 
     public void getTheIndexes(char tile) 
     {
@@ -181,6 +222,10 @@ using System.Threading.Tasks;
                 horizontalIndex = 9;
                 verticalIndex = 2;
                 break;
+            case '!':
+                horizontalIndex = 9;
+                verticalIndex = 3;
+                break; 
             default:
                 horizontalIndex = 0;
                 verticalIndex = 4;

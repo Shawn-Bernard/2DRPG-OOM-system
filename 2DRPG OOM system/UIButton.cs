@@ -36,7 +36,9 @@ public class UIButton
 
     public enum ButtonType 
     {
+        // This set the type of button and what action it will trigger when its clicked
         StartGame,
+        ToMenu,
         Exit
     }
 
@@ -49,8 +51,9 @@ public class UIButton
 
     public bool WithInBounds(MouseState _mouseState) 
     {
-        Vector2 pointPosition = new Vector2(_mouseState.Position.X, _mouseState.Position.Y);
+        Vector2 pointPosition = new Vector2(_mouseState.Position.X, _mouseState.Position.Y);   // get the position of the mouse
 
+        // check if the position of mouse is within the button
 
         return pointPosition.X > buttonPosition.X && pointPosition.X < buttonPosition.X + width
             && pointPosition.Y > buttonPosition.Y && pointPosition.Y < buttonPosition.Y + height;            

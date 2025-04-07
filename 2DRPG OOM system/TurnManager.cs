@@ -1,10 +1,6 @@
 ﻿using _2DRPG_OOM_system;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 public class TurnManager
 {
@@ -16,7 +12,7 @@ public class TurnManager
         
         if (characterTurn < Game1.characters.Count) 
         {
-            Actor turnCharacter = Game1.characters[characterTurn];    
+            Actor turnCharacter = Game1.characters[characterTurn];    // Take the actor who has the current turn
             
             if(turnCharacter.turn)
             {
@@ -24,9 +20,9 @@ public class TurnManager
             }
             else
             {
-                characterTurn++;
+                characterTurn++;     // When the actor finishes its turn, the turn goes to the next actor 
                 for (int i = 0; i < Game1.characters.Count; i++)
-                    Game1.characters[i].feedback = ""; 
+                    Game1.characters[i].feedback = "";   // When a turn ends, all feedback return to default values
             }
             
         }
@@ -37,13 +33,15 @@ public class TurnManager
             {
                 Game1.characters[i].turn = true;
                 if (Game1.characters[i]._healthSystem.invincibility)
-                    Game1.characters[i]._healthSystem.invincibility = false;
+                    Game1.characters[i]._healthSystem.invincibility = false;  // In case an actor is in invincibility mode, it turn off since only last 1 turn
             }
         }
     }
 
     public void resetTurns() 
     {
+        // Set turn to all actor to false
+
         for(int i = 0; i < Game1.characters.Count; i++) 
         {
             Game1.characters[i].turn = false;

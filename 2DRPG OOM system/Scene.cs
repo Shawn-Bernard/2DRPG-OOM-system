@@ -10,9 +10,7 @@ using System.Threading.Tasks;
 
 public class Scene
 {
-    public Color backgroundColor; 
-
-    
+    public Color backgroundColor;     
 
     public virtual void SceneUpdate(GameTime gameTime) 
     {
@@ -75,8 +73,7 @@ public class Scene
         Game1.itemsOnMap.Clear();
 
         Game1.tileMap.LoadPremadeMap("LoadedMap1.txt");
-
-        Game1.turnManager.resetTurns();
+        Game1.tileMap.BorderWithWall();         
 
         for (int i = 0; i < 10; i++)
         {
@@ -118,6 +115,8 @@ public class Scene
 
         Game1.placementManager.AddEnemiesLevel3();
 
+        Game1.turnManager.resetTurns();
+
         // Place new items in the second map
         for (int i = 0; i < 5; i++)
         {
@@ -136,7 +135,17 @@ public class Scene
     {
         resetLevel();
 
-        Game1.placementManager.AddEnemiesBossLevel();
+        Game1.placementManager.AddEnemiesBossLevel();        
+
+        for (int i = 0; i < 3; i++) 
+        {
+            Game1.tempPoints.Add(Game1.placementManager.GetWalkablePoint(Game1.tileMap));
+        }
+
+        Game1.itemsOnMap.Add(new Potion(Game1.tempPoints[0]));
+        Game1.itemsOnMap.Add(new FireballScroll(Game1.tempPoints[1]));
+        Game1.itemsOnMap.Add(new LightningScroll(Game1.tempPoints[2])); 
+        
     }
 
     public void goToGameOver() 
