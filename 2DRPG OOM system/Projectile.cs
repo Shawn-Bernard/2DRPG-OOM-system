@@ -28,8 +28,8 @@ public class Projectile
     public void ProjectileUpdate(GameTime gameTime) 
     {
         // the projectile moves until it hit a wall
-        if(!hit)
-        position += direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        if (!hit)
+            position += direction;// * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         if (collidingWithWall(Game1.tileMap, '#') || collidingWithWall(Game1.tileMap, '$')) 
             hit = true; 

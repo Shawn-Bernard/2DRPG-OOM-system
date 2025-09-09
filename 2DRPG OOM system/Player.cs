@@ -224,7 +224,12 @@ public class Player : Actor
             goToNextLevel = true;
             levelComplition = false; 
         }
+
+        if (Game1.characters[0] is Player && checkingForCollision(Game1.tileMap, '+', this, 0, 0))
+        {
             
+        }
+
 
         oldState = keyboardState;
 

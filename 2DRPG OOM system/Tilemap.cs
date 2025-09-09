@@ -106,7 +106,7 @@ using System.Threading.Tasks;
             }
             result += Environment.NewLine;
         }
-
+        Debug.WriteLine(result);
         return result;
     }
 
@@ -143,6 +143,10 @@ using System.Threading.Tasks;
                 else if (lines[j][i] == '!') // Door Open
                 {
                     daMap[i, j] = '!'; 
+                }
+                else if (lines[j][i] == '+') // Shops
+                {
+                    daMap[i, j] = '+';
                 }
                 else
                 {

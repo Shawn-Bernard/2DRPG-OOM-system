@@ -43,7 +43,7 @@ namespace _2DRPG_OOM_system
         public static List<Vector2> tempPoints = new List<Vector2>();
 
         // This list will contains all the scenes the game will have
-        private List<Scene> GameScenes = new List<Scene>();
+        public static List<Scene> GameScenes = new List<Scene>();
 
       
         public static int maxNumLevel;  // How many scenes the game has
@@ -52,6 +52,7 @@ namespace _2DRPG_OOM_system
         private Texture2D button01;  // Creating a button for using in different scenes
         private Menu EndScreen = new Menu();  // Creating the scene when reach the end of the game and win
         private Menu GameOver = new Menu();  // Creating the scene when you lose
+        private Menu shopMenu = new Menu();
         
         
         public Game1()
@@ -91,7 +92,7 @@ namespace _2DRPG_OOM_system
             GameOver.backgroundColor = Color.Lerp(Color.Black, Color.Honeydew, 0.25f); 
 
             //Store all the scenes in the list of scene 
-            GameScenes.Add(mainMenu);  
+            GameScenes.Add(mainMenu);
             GameScenes.Add(new Level(1));
             GameScenes.Add(new Level(2));
             GameScenes.Add(new Level(3));

@@ -101,7 +101,7 @@ public class Actor
     public void waitingTurnToFinish(float _time, GameTime _gameTime) 
     {
         // How much time between turns
-        waitingTime += (float)_gameTime.ElapsedGameTime.TotalSeconds;
+        waitingTime += 10; //(float)_gameTime.ElapsedGameTime.TotalSeconds;
         if (waitingTime > _time)
         {
 

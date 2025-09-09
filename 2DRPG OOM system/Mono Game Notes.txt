@@ -1,0 +1,5 @@
+Mono Game Notes
+
+Money can be obtained from quest, killing enemies & level completion.
+
+Shop work like item but checks if player has enough money. This could also work how checking tiles work
