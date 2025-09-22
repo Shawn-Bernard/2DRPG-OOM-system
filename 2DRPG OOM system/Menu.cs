@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _2DRPG_OOM_system;
 
 
 public class Menu : Scene
@@ -14,6 +15,10 @@ public class Menu : Scene
 
     public List<UIText> textList = new List<UIText>(); 
 
+    public Menu()
+    {
+        Game1.GameMenus.Add(this);
+    }
 
     public override void SceneUpdate(GameTime gameTime)
     {

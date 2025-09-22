@@ -15,6 +15,7 @@ public class PlacementManager
         pX = 0;
         pY = 0; 
     }
+    private Random random = new Random();
 
     private bool isPlaced;
 
@@ -44,6 +45,7 @@ public class PlacementManager
 
     public void initializeItems(List<Item> listOfItems, List<Vector2> listOfVectors) 
     {        
+
         listOfItems.Add(new Potion(listOfVectors[0]));
         listOfItems.Add(new Potion(listOfVectors[1]));
         listOfItems.Add(new FireballScroll(listOfVectors[2]));
@@ -56,21 +58,14 @@ public class PlacementManager
         listOfItems.Add(new FireballScroll(listOfVectors[9]));
     }
 
-    public void initializeItems(List<Item> listOfItems, List<Vector2> listOfVectors)
+    public void initializeItems(List<Shop> listOfShop, List<Vector2> listOfVectors)
     {
-        listOfItems.Add(new Potion(listOfVectors[0]));
-        listOfItems.Add(new Potion(listOfVectors[1]));
-        listOfItems.Add(new FireballScroll(listOfVectors[2]));
-        listOfItems.Add(new LightningScroll(listOfVectors[3]));
-        listOfItems.Add(new SacredPotion(listOfVectors[4]));
-        listOfItems.Add(new LightningScroll(listOfVectors[5]));
-        listOfItems.Add(new FireballScroll(listOfVectors[6]));
-        listOfItems.Add(new Potion(listOfVectors[7]));
-        listOfItems.Add(new LightningScroll(listOfVectors[8]));
-        listOfItems.Add(new FireballScroll(listOfVectors[9]));
+        listOfShop.Add(new HealthShop(listOfVectors[0]));
+        listOfShop.Add(new FireballShop(listOfVectors[1]));
+        listOfShop.Add(new LightningShop(listOfVectors[2]));
     }
 
-    public void
+    //public void
 
 
     public void CheckPlacement(Tilemap tilemap) 
@@ -82,6 +77,50 @@ public class PlacementManager
             isPlaced = true;
         }
     }
+    public void AddEnemiesLevel()
+    {
+        int bossCount = 0;
+        Enemy.EnemyType lastType = Enemy.EnemyType.Boss; // start with something (doesn’t matter)
+
+        for (int i = 0; i < 4; i++)
+        {
+            Enemy.EnemyType randomType;
+
+            // Keep picking until it's not the same as the last one
+            do
+            {
+                randomType = (Enemy.EnemyType)random.Next(0, Enum.GetValues(typeof(Enemy.EnemyType)).Length);
+            }
+            while (lastType == randomType);
+
+            Vector2 tempVector = GetWalkablePoint(Game1.tileMap);
+
+            switch (randomType)
+            {
+                case Enemy.EnemyType.Boss:
+                    if (bossCount == 0) // only allow 1 boss
+                    {
+                        Game1.characters.Add(new Boss(16, 6));
+                        bossCount++;
+                    }
+                    break;
+
+                case Enemy.EnemyType.Ghost:
+                    Game1.characters.Add(new Ghost((int)tempVector.X, (int)tempVector.Y));
+                    break;
+
+                case Enemy.EnemyType.Mage:
+                    Game1.characters.Add(new DarkMage((int)tempVector.X, (int)tempVector.Y));
+                    break;
+            }
+
+            // Update last type
+            lastType = randomType;
+        }
+
+        Game1.turnManager.resetTurns();
+    }
+
 
     public void AddEnemiesLevel1() 
     {

@@ -8,6 +8,7 @@ public class Boss : Enemy
 {
     public Boss (int iPosX, int iPosY) 
     {
+        enemyType = EnemyType.Boss;
         _healthSystem.health = 20;
         _healthSystem.power = 3;
         _healthSystem.shield = 0;

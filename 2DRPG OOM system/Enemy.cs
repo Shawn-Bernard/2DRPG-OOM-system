@@ -10,7 +10,15 @@ public class Enemy : Actor
 {       
 
     public string eMovement;
-   
+
+    public enum EnemyType
+    {
+        Mage,
+        Ghost,
+        Boss,
+    }
+
+    public EnemyType enemyType = EnemyType.Mage;
 
     public string TypeOfMovement() 
     {

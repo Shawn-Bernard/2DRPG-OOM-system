@@ -11,6 +11,7 @@ public class Ghost : Enemy
 {
     public Ghost(int iPosX, int iPosY) 
     {
+        enemyType = EnemyType.Ghost;
         _healthSystem.health = 7;
         _healthSystem.power = 3;
         _healthSystem.shield = 0;

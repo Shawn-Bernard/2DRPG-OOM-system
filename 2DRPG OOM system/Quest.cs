@@ -8,11 +8,13 @@ using System.Diagnostics;
 
 public class Quest
 {
-    public enum QuestType
+    public enum GoalType
     {
+        DarkMage,
+        Ghost,
+        Boss,
         Kill,
-        BeatLevel,
-        None
+        BeatLevel
     };
 
     public string title;
@@ -20,7 +22,7 @@ public class Quest
     public int progress;
     private int money;
     public Color color;
-    public QuestType questType;
+    public GoalType questType;
     public bool IsComplete
     {
         get
@@ -36,7 +38,7 @@ public class Quest
             }
         }
     }
-    public Quest(string Title, int Goal, QuestType TypeOfQuest) 
+    public Quest(string Title, int Goal, GoalType TypeOfQuest) 
     {
         title = Title;
         goal = Goal;
@@ -45,10 +47,10 @@ public class Quest
 
         switch (TypeOfQuest)
         {
-            case QuestType.Kill:
+            case GoalType.Kill:
                 money = 10;
                 break;
-            case QuestType.BeatLevel:
+            case GoalType.BeatLevel:
                 money = 5;
                 break;
         }
@@ -76,7 +78,7 @@ public class Quest
         }
     }
 
-    public bool QuestCheck(QuestType type)
+    public bool QuestCheck(GoalType type)
     {
         if (progress == goal)
         {

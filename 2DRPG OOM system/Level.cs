@@ -60,7 +60,21 @@ public class Level : Scene
 
             if (Game1.characters[i]._healthSystem.life <= 0)
             {
-                player.QuestProgressionCheck(Quest.QuestType.Kill);
+                switch(Game1.characters[i])
+                {
+                    case DarkMage:
+                        player.QuestProgressionCheck(Quest.GoalType.DarkMage);
+                        break;
+                    case Boss:
+                        player.QuestProgressionCheck(Quest.GoalType.Boss);
+                        break;
+                    case Ghost:
+                        player.QuestProgressionCheck(Quest.GoalType.Ghost);
+                        break;
+
+
+                }
+                player.QuestProgressionCheck(Quest.GoalType.Kill);
                 Game1.characters.Remove(Game1.characters[i]);
             }
                        
@@ -95,6 +109,7 @@ public class Level : Scene
                     Game1.itemsOnMap.Remove(Game1.itemsOnMap[i]);
             }
 
+
             // This open the door 
             if (((Player)Game1.characters[0]).levelComplition && !openDoor)
             {
@@ -109,7 +124,12 @@ public class Level : Scene
                 openDoor = false;
                 goToNextLevel(Game1.currentScene + 1);
                 changeNextScene();
-                ((Player)Game1.characters[0]).QuestProgressionCheck(Quest.QuestType.BeatLevel);
+                ((Player)Game1.characters[0]).QuestProgressionCheck(Quest.GoalType.BeatLevel);
+            }
+
+            if (((Player)Game1.characters[0]).goToNextLevel && player.completedQuest.Count == Game1.allQuest.Count)
+            {
+                Debug.WriteLine("All quest done ");
             }
         }        
         
@@ -134,6 +154,11 @@ public class Level : Scene
             Game1.itemsOnMap[i].DrawItem(_spriteBatch);
         }
 
+        // Draw all the items that are in the tilemap
+        for (int i = 0; i < Game1.shopsOnMap.Count; i++)
+        {
+            Game1.shopsOnMap[i].DrawShop(_spriteBatch);
+        }
 
 
         // Draw the player
@@ -201,7 +226,22 @@ public class Level : Scene
                 ((Enemy)Game1.characters[i]).DrawStats(_spriteBatch, i, (i - 1) * 40);
         }
 
-        if(numberOfLevel!=4)
+        // Draw the enemies stats
+        
+        for (int i = 1; i < Game1.characters.Count; i++)
+        {
+            if (Game1.characters[i] is Player)
+            {
+                for (int j = 1; j < Game1.allQuest.Count; j++)
+                {
+                    Quest quest = (Quest)Game1.allQuest[j];
+                    ((Player)Game1.characters[i]).CreateQuest(quest.title,quest.goal,quest.questType);
+                }
+            }
+                
+        }
+
+        if (numberOfLevel!=4)
         _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(0, 130), Color.White);  // This show in which level the player is
         else
             _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(0, 130), Color.White);  // The four level is the boss level
@@ -215,21 +255,7 @@ public class Level : Scene
     {
         //This initialize the corresponding level when the player jumps into it
 
-        switch (numLvl) 
-        {
-            case 2:
-                goToSecondLevel();
-                break;
-            case 3: 
-                goToThirdLevel();
-                break;
-            case 4:
-                goToFourLevel();
-                break;
-            default:
-                Debug.Write("There is no level yet");
-                break; 
-        }
+        goToNextLevel();
     }
       
         
