@@ -241,8 +241,8 @@ public class Level : Scene
                 
         }
 
-        if (numberOfLevel!=4)
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(0, 130), Color.White);  // This show in which level the player is
+        if ( numberOfLevel != Game1.maxNumLevel)
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + (numberOfLevel + 1), new Vector2(0, 130), Color.White);  // This show in which level the player is
         else
             _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(0, 130), Color.White);  // The four level is the boss level
 

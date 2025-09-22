@@ -89,7 +89,7 @@ public class Actor
         
     }
 
-    public void FinishTurn()
+    public virtual void FinishTurn()
     {
         // The actor finish the turn, and now enable the transition between turns
         waitingPhase = true;

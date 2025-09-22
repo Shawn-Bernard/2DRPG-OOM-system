@@ -119,6 +119,8 @@ namespace _2DRPG_OOM_system
             GameMenus.Add(GameOver);
             //Store all the scenes in the list of scene 
             GameScenes.Add(mainMenu); //Index of 0
+            GameScenes.Add(EndScreen); //Index of 1
+            GameScenes.Add(GameOver); //Index of 2 
             for (int i = 0; i < totalQuest; i++)
             {
                 GameScenes.Add(new Level(i));
@@ -127,8 +129,7 @@ namespace _2DRPG_OOM_system
             AddQuestList();
 
             
-            GameScenes.Add(EndScreen); //Index of total Quest + 1
-            GameScenes.Add(GameOver); //Index of total Quest + 2
+            
 
             // Once all the scenes are created and stored in the list of scene, we have how many scenes the game has
             maxNumLevel = GameScenes.Count;

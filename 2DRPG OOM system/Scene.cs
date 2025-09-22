@@ -1,6 +1,7 @@
 ﻿using _2DRPG_OOM_system;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Data;
 
 
@@ -22,7 +23,6 @@ public class Scene
     public void changeNextScene() 
     {
         Game1.currentScene++;
-
     }
 
     public void StartGame() 
@@ -36,7 +36,7 @@ public class Scene
                 player.resetQuest();
             }
         }
-        Game1.currentScene = 1;
+        Game1.currentScene = Game1.GameMenus.Count;
         goToFirstLevel(); 
     }      
 
@@ -77,6 +77,10 @@ public class Scene
         // generate another map based on random
         Game1.mString = Game1.tileMap.GenerateMapString(25, 10);
         Game1.tileMap.ConvertToMap(Game1.mString, Game1.tileMap.multidimensionalMap);
+    }
+    public void AddNextLevel(int level)
+    {
+        Game1.GameScenes.Add(new Level(level)); 
     }
     public void goToNextLevel()
     {
@@ -148,7 +152,7 @@ public class Scene
     public void goToGameOver() 
     {
         // go to the scene where the game over is
-        Game1.currentScene = Game1.totalQuest += 2;
+        Game1.currentScene = 2;
         ClearAllLists(); 
     }
 
