@@ -56,6 +56,22 @@ public class PlacementManager
         listOfItems.Add(new FireballScroll(listOfVectors[9]));
     }
 
+    public void initializeItems(List<Item> listOfItems, List<Vector2> listOfVectors)
+    {
+        listOfItems.Add(new Potion(listOfVectors[0]));
+        listOfItems.Add(new Potion(listOfVectors[1]));
+        listOfItems.Add(new FireballScroll(listOfVectors[2]));
+        listOfItems.Add(new LightningScroll(listOfVectors[3]));
+        listOfItems.Add(new SacredPotion(listOfVectors[4]));
+        listOfItems.Add(new LightningScroll(listOfVectors[5]));
+        listOfItems.Add(new FireballScroll(listOfVectors[6]));
+        listOfItems.Add(new Potion(listOfVectors[7]));
+        listOfItems.Add(new LightningScroll(listOfVectors[8]));
+        listOfItems.Add(new FireballScroll(listOfVectors[9]));
+    }
+
+    public void
+
 
     public void CheckPlacement(Tilemap tilemap) 
     {

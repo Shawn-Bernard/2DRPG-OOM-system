@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 
@@ -11,7 +12,7 @@ public class Player : Actor
 
     public Player(int iPosX, int iPosY)
     {
-        _healthSystem.health = 15;  
+        _healthSystem.health = 150;  
         _healthSystem.power = 1;
         _healthSystem.shield = 3;  
         _healthSystem.life = 3;   
@@ -22,7 +23,7 @@ public class Player : Actor
         turn = true;
         waitingPhase = false;
         _healthSystem.status = "Normal";
-        _healthSystem.setMaxHP(15);
+        _healthSystem.setMaxHP(150);
         _healthSystem.setMaxShield(3);
         keyPress = false;
         cropPositionX = 1;
@@ -31,7 +32,8 @@ public class Player : Actor
         _healthSystem.invincibility = false;
         playerInventory.SetInventorySlots(5); 
         shot = false;
-        resetInventory();         
+        resetInventory();
+        resetQuest();
     }
 
     private KeyboardState oldState;     
@@ -42,10 +44,35 @@ public class Player : Actor
     public bool levelComplition;  // Its true when the current level is completed
     public bool goToNextLevel; // this allows the player to go to the next level
     public bool aimingMode; // This allow the player to shoot 
-   
+
+    public List<Quest> activeQuest = new List<Quest>();
+    public List<Quest> completedQuest = new List<Quest>();
+
+    public int money;
+
+    public int Money
+    {
+        get
+        {
+            return money;
+        }
+        set
+        {
+            if (value < 0)
+            {
+                money = 0;
+            }
+            else
+            {
+                money = value;
+            }
+        }
+    }
+
 
     public override void TurnUpdate(GameTime gameTime)
     {
+
         KeyboardState keyboardState = Keyboard.GetState();
 
         // visualization if the player has been damaged
@@ -254,14 +281,27 @@ public class Player : Actor
     {
         // UI for the player's stats
         _spriteBatch.DrawString(Game1.mySpriteFont, "Player: ", new Vector2(0, posY), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(125, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(100, posY), Color.White);
         _spriteBatch.DrawString(Game1.mySpriteFont, "Shield: " + _healthSystem.shield, new Vector2(0, posY + 25), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(125, posY +25), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Inventory", new Vector2(0, posY + 50), Color.White);
-        _spriteBatch.DrawString(Game1.mySpriteFont, feedback, new Vector2(tilemap_PosX * Game1.tileSize * 2 - 5, ((tilemap_PosY + 5) * Game1.tileSize * 2) - 25), Color.White); 
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Lives: " + _healthSystem.life, new Vector2(100, posY +25), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Items", new Vector2(0, posY + 50), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, feedback, new Vector2(tilemap_PosX * Game1.tileSize * 2 - 5, ((tilemap_PosY + 5) * Game1.tileSize * 2) - 25), Color.White);
+
+        _spriteBatch.DrawString(Game1.mySpriteFont, $"Money: ${Money}", new Vector2(100, posY + 50), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Quest", new Vector2(300, posY), Color.White);
+
+        for (int i = 0; i < activeQuest.Count; i++)
+        {
+            _spriteBatch.DrawString(Game1.mySpriteFont, activeQuest[i].ToString(), new Vector2(220, 25 * (i + 1)), activeQuest[i].QuestTextColor());
+        }
+
+        for (int i = 0; i < completedQuest.Count; i++)
+        {
+            _spriteBatch.DrawString(Game1.mySpriteFont, completedQuest[i].ToString(), new Vector2(425, 25 * (i + 1)), completedQuest[i].QuestTextColor());
+        }
 
         // The UI for the inventory
-        for(int i = 0; i < 5; i++) 
+        for (int i = 0; i < 5; i++) 
         {
             _spriteBatch.DrawString(Game1.mySpriteFont, (i+1).ToString(), new Vector2(12 + 25 * i, posY + 75),  Color.White);            
             _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(0, 0, Game1.tileSize, Game1.tileSize), Color.White);
@@ -275,6 +315,42 @@ public class Player : Actor
         {
             _spriteBatch.Draw(Game1.mapTexture, new Rectangle(i * 25, posY + 100, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(playerInventory.inventory[i].cropPosX * Game1.tileSize, playerInventory.inventory[i].cropPosY * Game1.tileSize, Game1.tileSize, Game1.tileSize) , Color.White);
         }
+    }
+
+    public void resetQuest()
+    {
+        activeQuest.Clear();
+        completedQuest.Clear();
+
+        CreateQuest("Kill 3 enemies ", 3,Quest.QuestType.Kill);
+        CreateQuest("Beat 1 Level ",1, Quest.QuestType.BeatLevel);
+        CreateQuest("Kill the Boss ",1, Quest.QuestType.Kill);
+
+    }
+
+    public void CreateQuest(string questName, int requirements, Quest.QuestType questType)
+    {
+        activeQuest.Add(new Quest(questName,requirements,questType));
+    }
+
+    public void QuestProgressionCheck(Quest.QuestType questType)
+    {
+        for (int i = 0; i < activeQuest.Count; i++)
+        {
+            Quest quest = activeQuest[i];
+            if (quest.questType == questType)
+            {
+                quest.AddProgress();
+                if (quest.IsComplete)
+                {
+                    Money += quest.GetReward();
+                    completedQuest.Add(quest);
+                    activeQuest.Remove(activeQuest[i]);
+                    //completedQuest.Add(new Quest(quest.title, quest.goal, quest.questType));
+                }
+            }
+        }
+        
     }
 
     public void pickItem(Item _item) 

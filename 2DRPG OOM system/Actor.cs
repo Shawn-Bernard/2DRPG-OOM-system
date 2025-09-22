@@ -30,7 +30,7 @@ public class Actor
 
     // This will check if the actor is alive in the game
     public bool active;
-
+    
     // This is the actor turn
     public bool turn;  
     public bool ismyTurn;  // This will tell the UI if it's this actor's current turn

@@ -49,7 +49,7 @@ public class Enemy : Actor
 
     public override void DrawStats(SpriteBatch _spriteBatch, int num, int posY)
     {
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Enemy " + num + ": ", new Vector2(600, posY), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Enemy " + num + ": ", new Vector2(700, posY), Color.White);
 
         if(ismyTurn)
             _spriteBatch.DrawString(Game1.mySpriteFont, "Turn", new Vector2(700, posY), Color.White);
@@ -57,7 +57,7 @@ public class Enemy : Actor
             _spriteBatch.DrawString(Game1.mySpriteFont, "", new Vector2(700, posY), Color.White);
 
 
-        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(600, posY + 20), Color.White);
+        _spriteBatch.DrawString(Game1.mySpriteFont, "HP: " + _healthSystem.health, new Vector2(700, posY + 20), Color.White);
 
         _spriteBatch.DrawString(Game1.mySpriteFont, feedback, new Vector2(tilemap_PosX * Game1.tileSize * 2 - 5, ((tilemap_PosY + 5) * Game1.tileSize * 2) - 25), Color.White);
     }

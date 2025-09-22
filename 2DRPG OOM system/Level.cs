@@ -20,6 +20,7 @@ public class Level : Scene
 
     private int numberOfLevel;
     private bool openDoor = false; 
+    public Player player;
 
     public override void SceneUpdate(GameTime gameTime)
     {
@@ -42,6 +43,7 @@ public class Level : Scene
 
             if (Game1.characters[i] is Player)
             {
+                player = (Player)Game1.characters[i];
                 if (((Player)Game1.characters[i]).fireBall != null)
                 {
                     ((Player)Game1.characters[i]).fireBall.ProjectileUpdate(gameTime);
@@ -57,7 +59,11 @@ public class Level : Scene
             }
 
             if (Game1.characters[i]._healthSystem.life <= 0)
-                Game1.characters.Remove(Game1.characters[i]);           
+            {
+                player.QuestProgressionCheck(Quest.QuestType.Kill);
+                Game1.characters.Remove(Game1.characters[i]);
+            }
+                       
 
         }
 
@@ -103,6 +109,7 @@ public class Level : Scene
                 openDoor = false;
                 goToNextLevel(Game1.currentScene + 1);
                 changeNextScene();
+                ((Player)Game1.characters[0]).QuestProgressionCheck(Quest.QuestType.BeatLevel);
             }
         }        
         
@@ -127,6 +134,8 @@ public class Level : Scene
             Game1.itemsOnMap[i].DrawItem(_spriteBatch);
         }
 
+
+
         // Draw the player
         if (Game1.characters[0] is Player)
         {
@@ -136,7 +145,7 @@ public class Level : Scene
                 Game1.characters[0].DrawStats(_spriteBatch, 1, 0);
 
                 if (((Player)Game1.characters[0]).levelComplition)
-                    _spriteBatch.DrawString(Game1.mySpriteFont, "Level Completed", new Vector2(300, 0), Color.White);
+                    _spriteBatch.DrawString(Game1.mySpriteFont, "Completed", new Vector2(70, 130), Color.White);
             }
 
         }
@@ -153,7 +162,8 @@ public class Level : Scene
                 _spriteBatch.Draw(Game1.mapTexture, new Rectangle(Game1.characters[i].tilemap_PosX * Game1.tileSize * 2, (Game1.characters[i].tilemap_PosY + 5) * Game1.tileSize * 2, Game1.tileSize * 2, Game1.tileSize * 2), new Rectangle(Game1.characters[i].cropPositionX * Game1.tileSize, Game1.characters[i].cropPositionY * Game1.tileSize, Game1.tileSize, Game1.tileSize), Game1.characters[i].AColor);
         }
 
-        _spriteBatch.DrawString(Game1.mySpriteFont, Game1.whosTurn, new Vector2(300f, 60f), Color.White);
+        // Whos Turn it is UI
+        _spriteBatch.DrawString(Game1.mySpriteFont, Game1.whosTurn, new Vector2(300f, 130f), Color.White);
 
         
         
@@ -192,9 +202,9 @@ public class Level : Scene
         }
 
         if(numberOfLevel!=4)
-        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(300, 120), Color.White);  // This show in which level the player is
+        _spriteBatch.DrawString(Game1.mySpriteFont, "Level " + numberOfLevel, new Vector2(0, 130), Color.White);  // This show in which level the player is
         else
-            _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(300, 120), Color.White);  // The four level is the boss level
+            _spriteBatch.DrawString(Game1.mySpriteFont, "Boss Level", new Vector2(0, 130), Color.White);  // The four level is the boss level
 
 
     }

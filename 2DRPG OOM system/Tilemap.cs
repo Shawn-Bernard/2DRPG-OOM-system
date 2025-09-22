@@ -61,19 +61,19 @@ using System.Threading.Tasks;
 
         if (typeOfString < 45)
         {
-            charElement = '*';
+            charElement = '*'; // Field
         }
         else if (typeOfString < 94)
         {
-            charElement = '%';
+            charElement = '%'; // Field 2
         }
         else if (typeOfString < 97)
         {
-            charElement = '$';
+            charElement = '$'; // Block
         }       
         else if (typeOfString < 100)
         {
-            charElement = '#';
+            charElement = '#'; // Wall
         }        
         else
         {
@@ -144,9 +144,17 @@ using System.Threading.Tasks;
                 {
                     daMap[i, j] = '!'; 
                 }
-                else if (lines[j][i] == '+') // Shops
+                else if (lines[j][i] == 'H') // Health Shop
                 {
-                    daMap[i, j] = '+';
+                    daMap[i, j] = 'H';
+                }
+                else if (lines[j][i] == 'L') // Lightning Shop
+                {
+                    daMap[i, j] = 'L';
+                }
+                else if (lines[j][i] == 'F') // Lightning Shop
+                {
+                    daMap[i, j] = 'F'; // Fireball Shop
                 }
                 else
                 {
@@ -206,30 +214,34 @@ using System.Threading.Tasks;
         // This determine the coordinates to crop the texture image to get the correct Tile
         switch (tile) 
         {
-            case '*':
+            case '*': // Field
                 horizontalIndex = 0;
                 verticalIndex = 4;
                 break;
-            case '%':
+            case '%': // Field 2
                 horizontalIndex = 1;
                 verticalIndex = 4;
                 break;
-            case '$':
+            case '$': // Block
                 horizontalIndex = 7;
                 verticalIndex = 1;
                 break;
-            case '#':
+            case '#': // Wall
                 horizontalIndex = 4;
                 verticalIndex = 3;
                 break;
-            case '@':
+            case '@': // Door Closed
                 horizontalIndex = 9;
                 verticalIndex = 2;
                 break;
-            case '!':
+            case '!': // Door Open
                 horizontalIndex = 9;
                 verticalIndex = 3;
-                break; 
+                break;
+            case 'H': // H Open
+                horizontalIndex = 5;
+                verticalIndex = 7;
+                break;
             default:
                 horizontalIndex = 0;
                 verticalIndex = 4;
